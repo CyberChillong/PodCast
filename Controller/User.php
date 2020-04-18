@@ -1,31 +1,47 @@
 <?php
 
-require_once "dbConnection.php";
+require_once "../Models/User.php";
 
-class User
+class USER
 {
-    private $dbConnection;
+    private $model;
 
     public function __construct()
     {
-        $this->dbConnection = new dbConnection();
+        $this->model = new UserModel();
     }
 
-    public function login($email, $password)
+    private function registar()
     {
-        $password = hash("md5", $password);
-        $query = "SELECT * FROM USERS WHERE EMAILS='" . $email . "' AND PASSWORD='" . $password . "'";
-        return $this->dbConnection->executarQuerySelect($query) === false ? false : "Utilizador Encontrado";
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $username = $_POST['username'];
+        $resultado = $this->model->registar($email, $password, $username);
+        IF ($resultado !== false && $resultado !== "Erro na Base de Dados") {
+           header("Location:../../View/login.php");
+        }
+        var_dump($resultado);
     }
 
-    public function registar($email, $password, $username)
+    private function login()
     {
-        if ($this->login($email, $password) === false) {
-            $password = hash("md5", $password);
-            $query = sprintf("INSERT INTO USERS (EMAILS,USERNAME,PASSWORD) VALUES('%s','%s','%s')", $email, $username, $password);
-            return $this->dbConnection->executarQuerySelect($query) === false ? false : "SUCESSO";
-        } else {
-            return "Utilizador já registado";
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $this->model->login($email, $password);
+
+    }
+
+    public function escolha()
+    {
+        $pathInfo = $_SERVER['PATH_INFO'];
+        $pathInfo = explode("/", $pathInfo);
+        if ($pathInfo[1] === "reg") {
+            $this->registar();
+        } elseif ($pathInfo[1] === "log") {
+            $this->login();
         }
     }
 }
+
+$u = new User();
+$u->escolha();

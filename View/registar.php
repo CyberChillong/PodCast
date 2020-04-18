@@ -1,3 +1,17 @@
-<?php
-var_dump(hash("md5","algo",true));
-var_dump(hash("md5","algo",false));
+<!DOCTYPE html>
+<html>
+<body>
+<form method="post" action="../Controller/USER.php/reg">
+    Username:<br>
+    <input type="password" name="username">
+    <br><br>
+    Email:<br>
+    <input type="text" name="email">
+    <br><br>
+    Password:<br>
+    <input type="password" name="password">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
