@@ -14,30 +14,20 @@ Class dbConnection {
     function authentication( $pStrEmail) {
         $strPasswordHash="";
         $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE EMAILS= '%s'",$pStrEmail);
-        $aQueryResults = ibase_fetch_assoc(ibase_query($this->oDatabaseConnection,$strQuery));
-        foreach ($aQueryResults as $Result){
-            $strPasswordHash = $Result;
-        }//foreach
-        return $strPasswordHash;
+        $oQueryResults = ibase_fetch_assoc(ibase_query($this->oDatabaseConnection,$strQuery));
+        if($oQueryResults!=null){
+            foreach ($oQueryResults as $Result){
+                $strPasswordHash = $Result;
+            }//foreach
+            return $strPasswordHash;
+        }//if
+        else{
+            return false;
+        }//else
     }//authentications
 
 
-
-    function selectUser($pStrEmail){
-        $strRect="";
-        $strQuery = "SELECT ID FROM USERS";
-        $sth = ibase_query($this->oDatabaseConnection, $strQuery);
-        $count = 0;
-        while($row[$count] = ibase_fetch_assoc($sth)){
-
-            $count++;
-        }//while
-        for ($i=0; $i < $count ; $i++){
-            $strRect.=$row[$i]["ID"].PHP_EOL;
-        }
-        return $strRect;
-    }//selectUser
 }//dbConnection
 
 $con = new dbConnection();
-echo($con->authentication("mail@mail.com"));
+var_dump($con->authentication("mail@mail.com"));
