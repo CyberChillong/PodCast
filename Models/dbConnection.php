@@ -11,7 +11,7 @@ class dbConnection
     public function __construct()
     {
     }
-    public function executarQueryUPDATEDELETE($query){
+    public function executarQueryUPDATEDELETEINSERT($query){
         $this->connect = ibase_connect(self::caminho, self::user, self::pass);
         $sth = ibase_query($this->connect, $query);
         ibase_close($this->connect);
