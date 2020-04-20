@@ -29,5 +29,5 @@ Class dbConnection {
 
 }//dbConnection
 
-$con = new dbConnection();
-var_dump($con->authentication("mail@mail.com"));
+//$con = new dbConnection();
+//var_dump($con->authentication("mail@mail.com"));
