@@ -20,14 +20,19 @@ class USER
         IF ($resultado !== false && $resultado !== "Erro na Base de Dados") {
            header("Location:../../View/login.php");
         }
-        var_dump($resultado);
     }
 
     private function login()
     {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $this->model->login($email, $password);
+        $resultado=$this->model->login($email, $password);
+        var_dump($resultado);
+        IF ($resultado !== false) {
+            header("Location:../../View/index.php");
+        }else{
+            header("Location:../../View/login.php");
+        }
 
     }
 
@@ -37,7 +42,7 @@ class USER
         $pathInfo = explode("/", $pathInfo);
         if ($pathInfo[1] === "reg") {
             $this->registar();
-        } elseif ($pathInfo[1] === "log") {
+        } else if ($pathInfo[1] === "log") {
             $this->login();
         }
     }

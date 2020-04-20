@@ -1,6 +1,6 @@
 <?php
 
-require_once "dbConnection.php";
+require_once "../Lib/dbConnection.php";
 
 class UserModel
 {
@@ -15,7 +15,7 @@ class UserModel
     {
         $password = hash("md5", $password);
         $query = "SELECT * FROM USERS WHERE EMAILS='" . $email . "' AND PASSWORD='" . $password . "'";
-        return count($this->dbConnection->executarQuerySelect($query)) === 2 ? "Utilizador Encontrado":false;
+        return count($this->dbConnection->executarQuerySelect($query)) === 2? "Utilizador Encontrado":false;
     }
 
     public function registar($email, $password, $username)
