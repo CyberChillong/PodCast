@@ -26,27 +26,53 @@ Class dbConnection {
         }//else
     }//authentications
 
-    function isEmailUnique($pStrEmailHash){
-
+    function isEmailUnique($pStrEmail){
+        $strQuery = sprintf("SELECT EMAILS FROM USERS WHERE EMAILS='%s'",$pStrEmail);
+        if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
+            return true;
+        }//if
+        else{
+            return false;
+        }//else
     }//isEmailUnique
 
 
 
     function isUsernameUnique($pStrUsername){
-
+        $strQuery = sprintf("SELECT USERNAME FROM USERS WHERE USERNAME='%s'",$pStrUsername);
+        if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
+            return true;
+        }//if
+        else{
+            return false;
+        }//else
     }//isUsernameUnique
 
 
     function isPasswordUnique($pStrPasswordHash){
-
+        $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE PASSWORD='%s'",$pStrPasswordHash);
+        if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
+            return true;
+        }//if
+        else{
+            return false;
+        }//else
     }//isPasswordUnique
 
     function makeUserRegistration($pStrUsername, $pStrPasswordHash, $pStrEmail ){
-
-
+        if(!($this->isPasswordUnique($pStrPasswordHash) &&
+            $this->isEmailUnique($pStrEmail) && $this->isUsernameUnique($pStrUsername))){
+            $strQuery = sprintf("INSERT INTO USERS(USERNAME, PASSWORD ,EMAILS ) VALUES ('%s', '%s','%s') ",
+            $pStrUsername, $pStrPasswordHash, $pStrEmail);
+            ibase_query($this->oDatabaseConnection, $strQuery);
+            return true;
+        }//iff
+        else{
+            return false;
+        }//else
     }//makeUserRegistration
 
 }//dbConnection
 
 //$con = new dbConnection();
-//var_dump($con->authentication("mail@mail.com"));
+//var_dump( $con->makeUserRegistration("RMB", "powerred97","mail@gmail.com"));
