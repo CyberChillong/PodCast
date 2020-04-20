@@ -15,17 +15,36 @@ Class dbConnection {
         $strPasswordHash="";
         $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE EMAILS= '%s'",$pStrEmail);
         $oQueryResults = ibase_fetch_assoc(ibase_query($this->oDatabaseConnection,$strQuery));
-        if($oQueryResults!=null){
+        if($oQueryResults!=null){//if the query result is different than null
             foreach ($oQueryResults as $Result){
-                $strPasswordHash = $Result;
+                $strPasswordHash = $Result; //get the password hash from Query results
             }//foreach
-            return $strPasswordHash;
+            return $strPasswordHash; //return the password Hash
         }//if
         else{
-            return false;
+            return false; // if the query result is null means that email account does not exist
         }//else
     }//authentications
 
+    function isEmailUnique($pStrEmailHash){
+
+    }//isEmailUnique
+
+
+
+    function isUsernameUnique($pStrUsername){
+
+    }//isUsernameUnique
+
+
+    function isPasswordUnique($pStrPasswordHash){
+
+    }//isPasswordUnique
+
+    function makeUserRegistration($pStrUsername, $pStrPasswordHash, $pStrEmail ){
+
+
+    }//makeUserRegistration
 
 }//dbConnection
 
