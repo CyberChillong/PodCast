@@ -9,32 +9,41 @@ class USER
     public function __construct()
     {
         $this->model = new UserModel();
+
     }
 
     private function registar()
     {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $username = $_POST['username'];
-        $resultado = $this->model->registar($email, $password, $username);
-        IF ($resultado !== false && $resultado !== "Erro na Base de Dados") {
+        session_start();
+        $email = strtolower($_POST['email']);
+        $password = strtolower($_POST['password']);
+        $username = strtolower($_POST['username']);
+        $resultado = $this->model->userRegistration($email, $password ,$username);
+        var_dump($resultado);
+        if ($resultado !== false) {
+            $_SESSION['LoginStatus'] = "Your registrations was made whit success, now you can made the login";
            header("Location:../../View/login.php");
         }
     }
 
-    private function login()
+    public function login()
     {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        session_start();
+        $email = strtolower($_POST['email']);
+        $password = strtolower($_POST['password']);
         $resultado=$this->model->login($email, $password);
         var_dump($resultado);
-        IF ($resultado !== false) {
-            header("Location:../../View/index.php");
+        if ($resultado !== false) {
+            $_SESSION['email']= $email;
+            header("Location:../../View/UserView.php");
         }else{
+            $_SESSION['LoginStatus'] = "Your Logging has fail verify your credentials our create an account";
             header("Location:../../View/login.php");
+
         }
 
     }
+
 
     public function escolha()
     {
@@ -47,6 +56,5 @@ class USER
         }
     }
 }
-
 $u = new User();
-$u->escolha();
+$u->login();

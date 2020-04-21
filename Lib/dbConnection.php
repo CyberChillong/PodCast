@@ -13,9 +13,9 @@ Class dbConnection {
 
     function authentication( $pStrEmail) {
         $strPasswordHash="";
-        $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE EMAILS= '%s'",$pStrEmail);
+        $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE EMAILS= '%s'",strtolower($pStrEmail));
         $oQueryResults = ibase_fetch_assoc(ibase_query($this->oDatabaseConnection,$strQuery));
-        if($oQueryResults!=null){//if the query result is different than null
+        if($oQueryResults!=null){ //if the query result is different than null
             foreach ($oQueryResults as $Result){
                 $strPasswordHash = $Result; //get the password hash from Query results
             }//foreach
@@ -27,32 +27,32 @@ Class dbConnection {
     }//authentications
 
     function isEmailUnique($pStrEmail){
-        $strQuery = sprintf("SELECT EMAILS FROM USERS WHERE EMAILS='%s'",$pStrEmail);
+        $strQuery = sprintf("SELECT EMAILS FROM USERS WHERE EMAILS='%s'",strtolower($pStrEmail));
         if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
-            return true;
+            return false;
         }//if
         else{
-            return false;
+            return true;
         }//else
     }//isEmailUnique
 
     function isUsernameUnique($pStrUsername){
-        $strQuery = sprintf("SELECT USERNAME FROM USERS WHERE USERNAME='%s'",$pStrUsername);
+        $strQuery = sprintf("SELECT USERNAME FROM USERS WHERE USERNAME='%s'",strtolower($pStrUsername));
         if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
-            return true;
+            return false;
         }//if
         else{
-            return false;
+            return true;
         }//else
     }//isUsernameUnique
 
     function isPasswordUnique($pStrPasswordHash){
         $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE PASSWORD='%s'",$pStrPasswordHash);
         if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
-            return true;
+            return false;
         }//if
         else{
-            return false;
+            return true;
         }//else
     }//isPasswordUnique
 
@@ -60,12 +60,12 @@ Class dbConnection {
         $bIsThisPasswordUnique = $this->isPasswordUnique($pStrPasswordHash);
         $bIsThisUsernameUnique = $this->isUsernameUnique($pStrUsername);
         $bIsThisEmailUnique = $this->isEmailUnique($pStrEmail);
-        if(!($bIsThisPasswordUnique  && $bIsThisEmailUnique && $bIsThisUsernameUnique )){
+        if(($bIsThisPasswordUnique  && $bIsThisEmailUnique && $bIsThisUsernameUnique) === true){
             $strQuery = sprintf("INSERT INTO USERS(USERNAME, PASSWORD ,EMAILS ) VALUES ('%s', '%s','%s') ",
-            $pStrUsername, $pStrPasswordHash, $pStrEmail);
+                strtolower($pStrUsername), $pStrPasswordHash, strtolower($pStrEmail));
             ibase_query($this->oDatabaseConnection, $strQuery);
             return true;
-        }//iff
+        }//if
         else{
             return false;
         }//else
@@ -73,5 +73,5 @@ Class dbConnection {
 
 }//dbConnection
 
-//$con = new dbConnection();
-//var_dump( $con->makeUserRegistration("RMB", "powerred97","mail@gmail.com"));
+
+
