@@ -3,7 +3,7 @@
 <body>
 <form method="post" action="../Controller/USER.php/reg">
     Username:<br>
-    <input type="password" name="username">
+    <input type="text" name="username">
     <br><br>
     Email:<br>
     <input type="text" name="email">
