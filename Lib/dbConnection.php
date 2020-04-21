@@ -36,8 +36,6 @@ Class dbConnection {
         }//else
     }//isEmailUnique
 
-
-
     function isUsernameUnique($pStrUsername){
         $strQuery = sprintf("SELECT USERNAME FROM USERS WHERE USERNAME='%s'",$pStrUsername);
         if(ibase_fetch_assoc(ibase_query($this->oDatabaseConnection, $strQuery))!=null){
@@ -47,7 +45,6 @@ Class dbConnection {
             return false;
         }//else
     }//isUsernameUnique
-
 
     function isPasswordUnique($pStrPasswordHash){
         $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE PASSWORD='%s'",$pStrPasswordHash);
