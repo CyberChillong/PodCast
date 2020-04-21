@@ -55,7 +55,7 @@ Class dbConnection {
             return false;
         }//else
     }//isPasswordUnique
-  
+
   function makeUserRegistration($pStrUsername, $pStrPasswordHash, $pStrEmail ){
         $bIsThisPasswordUnique = $this->isPasswordUnique($pStrPasswordHash);
         $bIsThisUsernameUnique = $this->isUsernameUnique($pStrUsername);
