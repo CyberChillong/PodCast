@@ -55,10 +55,12 @@ Class dbConnection {
             return false;
         }//else
     }//isPasswordUnique
-  
-  function makeUserRegistration($pStrUsername, $pStrPasswordHash, $pStrEmail ){
-        if(!($this->isPasswordUnique($pStrPasswordHash) &&
-            $this->isEmailUnique($pStrEmail) && $this->isUsernameUnique($pStrUsername))){
+
+    function makeUserRegistration($pStrUsername, $pStrPasswordHash, $pStrEmail ){
+        $bIsThisPasswordUnique = $this->isPasswordUnique($pStrPasswordHash);
+        $bIsThisUsernameUnique = $this->isUsernameUnique($pStrUsername);
+        $bIsThisEmailUnique = $this->isEmailUnique($pStrEmail);
+        if(!($bIsThisEmailUnique && $bIsThisUsernameUnique && $bIsThisPasswordUnique)){
             $strQuery = sprintf("INSERT INTO USERS(USERNAME, PASSWORD ,EMAILS ) VALUES ('%s', '%s','%s') ",
             $pStrUsername, $pStrPasswordHash, $pStrEmail);
             ibase_query($this->oDatabaseConnection, $strQuery);
