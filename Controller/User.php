@@ -8,13 +8,13 @@ class USER
 
     public function __construct()
     {
+        session_start();
         $this->model = new UserModel();
 
     }
 
     private function registar()
     {
-        session_start();
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $username = strtolower($_POST['username']);
@@ -28,7 +28,7 @@ class USER
 
     public function login()
     {
-        session_start();
+
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $resultado=$this->model->login($email, $password);
@@ -56,5 +56,5 @@ class USER
         }
     }
 }
-$u = new User();
-$u->login();
+$User = new User();
+$User->escolha();
