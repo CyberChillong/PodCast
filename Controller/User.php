@@ -1,15 +1,15 @@
 <?php
 
-require_once "../Models/User.php";
-
+require_once "../Models/UserModel.php";
+require_once "../Lib/dbUser.php";
 class USER
 {
     private $model;
+    private $dbUser;
 
     public function __construct()
     {
-        $this->model = new UserModel();
-
+        $this->dbUser=new dbUser();
     }
 
     private function registar()
@@ -18,7 +18,9 @@ class USER
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $username = strtolower($_POST['username']);
-        $resultado = $this->model->userRegistration($email, $password ,$username);
+        $password=hash("md5", strtolower($password));
+        $email=strtolower($email);
+        $resultado = $this->dbUser->makeUserRegistration($username, $password ,$email);
         var_dump($resultado);
         if ($resultado !== false) {
             $_SESSION['LoginStatus'] = "Your registrations was made whit success, now you can made the login";
@@ -31,9 +33,10 @@ class USER
         session_start();
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
-        $resultado=$this->model->login($email, $password);
-        var_dump($resultado);
-        if ($resultado !== false) {
+        $password = hash("md5", $password);
+        $oPasswordHash = $this->dbUser->authentication(strtolower($email));
+        $verificaçãoDePassword=$oPasswordHash === $password ? true:false;
+        if ($verificaçãoDePassword !== false) {
             $_SESSION['email']= $email;
             header("Location:../../View/UserView.php");
         }else{
@@ -57,4 +60,4 @@ class USER
     }
 }
 $u = new User();
-$u->login();
+$u->escolha();
