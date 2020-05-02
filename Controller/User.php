@@ -4,7 +4,7 @@ require_once "../Models/UserModel.php";
 require_once "../Lib/dbUser.php";
 class USER
 {
-    private $model;
+
     private $dbUser;
 
     public function __construct()
@@ -21,23 +21,25 @@ class USER
         $password=hash("md5", strtolower($password));
         $email=strtolower($email);
         $resultado = $this->dbUser->makeUserRegistration($username, $password ,$email);
-        var_dump($resultado);
         if ($resultado !== false) {
-            $_SESSION['LoginStatus'] = "Your registrations was made whit success, now you can made the login";
+            $_SESSION['RegistrationStatus'] = "Your registrations was made whit success, now you can made the login";
            header("Location:../../View/login.php");
+        }else{
+            $_SESSION['RegistrationStatus'] = "You have failed the registration process please repeat and verify your data";
+            header("Location:../../View/registar.php");
         }
-    }
+    }//registar
 
-    public function login()
+    private function login()
     {
         session_start();
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $password = hash("md5", $password);
-        $oPasswordHash = $this->dbUser->authentication(strtolower($email));
-        $verificaçãoDePassword=$oPasswordHash === $password ? true:false;
-        if ($verificaçãoDePassword !== false) {
-            $_SESSION['email']= $email;
+        $aResults = $this->dbUser->authentication( $email, $password);
+        if (count($aResults) > 0 ) {
+            var_dump($aResults);
+            $_SESSION['UserModel'] = new UserModel($aResults[0], $aResults[1],$email);
             header("Location:../../View/UserView.php");
         }else{
             $_SESSION['LoginStatus'] = "Your Logging has fail verify your credentials our create an account";

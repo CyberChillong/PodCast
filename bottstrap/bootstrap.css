@@ -10220,5 +10220,15 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6;
   }
+
+  .container-search {
+    width: available;
+    height: available;
+    text-align: center;
+  }
+  .container-search form {
+    width: 1000px;!important
+    height: 600px;!important
+  }
 }
 /*# sourceMappingURL=bootstrap.css.map */

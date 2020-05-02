@@ -20,7 +20,6 @@ if(isset($_SESSION['email'])){
         </li>
     </ul>
 </nav>
-<?php session_destroy()?>
 <div class="container">
 <form method="post" action="../Controller/USER.php/reg">
     <div class="form-group row justify-content-center">
@@ -39,6 +38,12 @@ if(isset($_SESSION['email'])){
         <input type="submit" value="Submit" class="btn btn-primary" required>
     </div>
 </form>
+    <?php
+    if(isset($_SESSION["RegistrationStatus"])){
+        echo "<div class=\"alert alert-danger\">" . $_SESSION["RegistrationStatus"] . "</div>";
+    }//if
+    session_destroy();
+    ?>
 </div>
 </body>
 </html>

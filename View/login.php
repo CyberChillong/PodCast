@@ -39,6 +39,9 @@ if(isset($_SESSION['email'])){
     if (isset($_SESSION["LoginStatus"])) {
         echo "<div class=\"alert alert-danger\">" . $_SESSION["LoginStatus"] . "</div>";
     }//if
+    if(isset($_SESSION["RegistrationStatus"])){
+        echo "<div class=\"alert alert-success\">" . $_SESSION["RegistrationStatus"] . "</div>";
+    }//if
     session_destroy();
     ?>
 </div>
