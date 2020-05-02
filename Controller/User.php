@@ -9,14 +9,12 @@ class USER
 
     public function __construct()
     {
-
-        $this->model = new UserModel();
         $this->dbUser=new dbUser();
-
     }
 
     private function registar()
     {
+        session_start();
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $username = strtolower($_POST['username']);
@@ -32,7 +30,7 @@ class USER
 
     public function login()
     {
-
+        session_start();
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $password = hash("md5", $password);
@@ -61,7 +59,5 @@ class USER
         }
     }
 }
-
-$User = new User();
-$User->escolha();
-
+$u = new User();
+$u->escolha();
