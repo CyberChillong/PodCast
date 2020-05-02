@@ -11,21 +11,40 @@ class dbUser
         $this->db = new dbConnection();
     }
 
-    function authentication($pStrEmail)
+    function authentication($pStrEmail, $pStrPassword)
     {
-        $strPasswordHash = "";
-        $strQuery = sprintf("SELECT PASSWORD FROM USERS WHERE EMAILS= '%s'", strtolower($pStrEmail));
+        $aUserInfo = [];
+        $strQuery = sprintf("SELECT ID, USERNAME FROM USERS WHERE EMAILS= '%s' AND PASSWORD = '%s' ", $pStrEmail,$pStrPassword);
         $oQueryResults = $this->db->selectDB($strQuery);
         if ($oQueryResults != null) { //if the query result is different than null
             foreach ($oQueryResults as $Result) {
-                $strPasswordHash = $Result; //get the password hash from Query results
+                array_push($aUserInfo, $Result); //get the user info ID, USERNAME, EMAIL
             }//foreach
-            return $strPasswordHash; //return the password Hash
         }//if
-        else {
-            return false; // if the query result is null means that email account does not exist
-        }//else
+        return $aUserInfo;
     }//authentications
+
+    function updateUserEmail($pUserId ,$pNewEmail){
+        $strQuery = sprintf("UPDATE USERS SET EMAILS= '%s' WHERE ID = '%f'", $pNewEmail, $pUserId);
+        $this->db->insertUpdateDeleteDB($strQuery);
+    }//updateUserEmail
+
+    function updateUserPassword($pNewPasswordHash, $pUserId){
+        $strQuery = sprintf("UPDATE USERS SET PASSWORD= '%s' WHERE ID = '%f'", $pNewPasswordHash, $pUserId);
+        $this->db->insertUpdateDeleteDB($strQuery);
+    }//updateUserPassword
+
+    function getUserFieldsUsingId($pUserId){
+        $aResults = [];
+        $strQuery = sprintf("SELECT EMAILS, USERNAME FROM USERS WHERE ID = '%f'",$pUserId);
+        $oQueryResults = $this->db->selectDB($strQuery);
+        if($oQueryResults != null){
+            foreach ($oQueryResults as $Result){
+                array_push($aResults, $Result);
+            }//foreach
+        }//if
+        return $aResults;
+    }//updateUserEmailUsingId
 
     function isEmailUnique($pStrEmail)
     {
@@ -76,3 +95,4 @@ class dbUser
         }//else
     }//makeUserRegistration
 }
+

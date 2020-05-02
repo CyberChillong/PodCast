@@ -10,12 +10,12 @@ Class dbConnection {
         $caminho = $_SERVER['SCRIPT_FILENAME'];
         $caminho = dirname($caminho);
         $caminho = dirname($caminho);
-        $this->CONNECTION_STRING= $caminho."/BD/Podcast.FDB";
+        $this->CONNECTION_STRING="D:\PodCastDB\PODCASTDB.FDB";
     }//checkUserExistence
 
    public function insertUpdateDeleteDB($query){
     $this->oDatabaseConnection = ibase_connect($this->CONNECTION_STRING,self::DATABASE_USER,self::DATABASE_USER_PASSWORD);
-    ibase_query($this->oDatabaseConnection, $query);;
+    ibase_query($this->oDatabaseConnection, $query);
     ibase_close($this->oDatabaseConnection);
    }
    public function selectDB($query){
