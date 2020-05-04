@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
-<?php session_start();
-if (isset($_SESSION['UserModel'])) {
-    header("Location:../View/index.php");
+<?php
+require_once "../Models/UserModel.php";
+session_start();
+if (isset($_SESSION['UserModel'])===false) {
+    header("Location:../View/login.php");
 } ?>
 <body><nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -29,26 +31,32 @@ if (isset($_SESSION['UserModel'])) {
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/USER.php/reg">
+    <form method="post" action="../Controller/USER.php/edit">
         <div class="form-group row justify-content-center">
             <label for="username">Username:</label>
-            <input type="text" name="username" class="form-control text-center" required>
+            <?php
+            echo '<input type="text" name="username" class="form-control text-center" required value='.$_SESSION["UserModel"]->username.'>';
+            ?>
         </div>
         <div class="form-group row justify-content-center">
             <label for="email">Email:</label>
-            <input type="email" name="email" class="form-control text-center" required>
+            <?php
+            echo '<input type="email" name="email" class="form-control text-center" required value='.$_SESSION["UserModel"]->emails.'>';
+            ?>
         </div>
         <div class="form-group row justify-content-center">
             <label for="password">Password:</label>
-            <input type="password" name="password" class="form-control text-center" required>
+            <?php
+            echo '<input type="password" name="password" class="form-control text-center" required value='.$_SESSION["UserModel"]->password.'>';
+            ?>
         </div>
         <div class="form-group row justify-content-center">
             <input type="submit" value="Submit" class="btn btn-primary" required>
         </div>
     </form>
     <?php
-    if (isset($_SESSION["RegistrationStatus"])) {
-        echo "<div class=\"alert alert-danger\">" . $_SESSION["RegistrationStatus"] . "</div>";
+    if (isset($_SESSION["EditAccountStatus"])) {
+        echo "<div class=\"alert alert-danger\">" . $_SESSION["EditAccountStatus"] . "</div>";
     }//if
     ?>
 </div>

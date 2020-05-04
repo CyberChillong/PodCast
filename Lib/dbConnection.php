@@ -10,7 +10,7 @@ Class dbConnection {
         $caminho = $_SERVER['SCRIPT_FILENAME'];
         $caminho = dirname($caminho);
         $caminho = dirname($caminho);
-        $this->CONNECTION_STRING="D:\PodCastDB\PODCASTDB.FDB";
+        $this->CONNECTION_STRING=realpath("../").'/BD/Podcast.FDB';
     }//checkUserExistence
 
    public function insertUpdateDeleteDB($query){
