@@ -2,14 +2,14 @@
 //require_once "../Library/dbConnection.php";
 //require_once "../vendor/autoload.php";
 namespace DAO;
-use Library\dbConnection;
-class dbUser
+use Library;
+class dbuser
 {
     private $db;
 
-    function __construct()
+    public function __construct()
     {
-        $this->db = new dbConnection();
+        $this->db = new Library\dbConnection();
     }//__construct
 
     function authentication($pStrEmail, $pStrPassword)

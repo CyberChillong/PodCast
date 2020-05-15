@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
-<?php session_start();
+<?php
+session_start();
 if (isset($_SESSION['UserModel'])) {
     header("Location:../View/index.php");
 } ?>

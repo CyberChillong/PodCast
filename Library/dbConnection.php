@@ -7,7 +7,7 @@ Class dbConnection {
     const DATABASE_USER_PASSWORD = "masterkey";
     private $oDatabaseConnection ;
 
-    function __construct()
+    public function __construct()
     {
         $this->CONNECTION_STRING=realpath("../").'/BD/Podcast.FDB';
     }//checkUserExistence
