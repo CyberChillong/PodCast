@@ -2,15 +2,6 @@
 require_once "../Models/UserModel.php";
 session_start();
 ?>
-<style>
-    html, body {
-        height: 100%;
-    }
-
-    .container {
-        height: 100%;
-    }
-</style>
 <!DOCTYPE html>
 <html>
 
@@ -35,7 +26,7 @@ session_start();
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">
-            <a href="./editAcount.php" class="nav-item nav-link">Edit Account</a>
+            <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             </div>';
         }

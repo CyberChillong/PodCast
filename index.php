@@ -1,4 +1,6 @@
-<?php session_start() ?>
+<?php session_start();
+require_once "./vendor/autoload.php";
+?>
 <!DOCTYPE html>
 <html>
 <!--<link rel="stylesheet" type="text/css" href="./bottstrap/bootstrap.css">-->
