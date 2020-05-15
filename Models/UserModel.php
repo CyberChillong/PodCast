@@ -1,5 +1,5 @@
 <?php
-
+namespace Models;
 Class UserModel{
     public $id;
     public $username;

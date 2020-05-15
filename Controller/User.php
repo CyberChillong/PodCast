@@ -1,20 +1,14 @@
 <?php
-/*
-require_once "../Models/UserModel.php";
-require_once "./DAO/dbUser.php";
-*/
-//use \DAO\dbUser;
-//require_once "../vendor/autoload.php";
 namespace Controller;
-use DAO\dbUser;
-class USER
+require "../vendor/autoload.php";
+use DAO\dbuser;
+use Models\UserModel;
+class User
 {
-
     private $dbUser;
-
     public function __construct()
     {
-        $this->dbUser = new dbUser();
+        $this->dbUser = new dbuser();
     }
 
     private function registar()
@@ -35,13 +29,13 @@ class USER
         }
     }//registar
 
-    public function login($mail, $pass)
+    public function login()
     {
         session_start();
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
-        $passwordHash = hash("md5", $pass);
-        $aResults = $this->dbUser->authentication($mail, $passwordHash);
+        $passwordHash = hash("md5", $password);
+        $aResults = $this->dbUser->authentication($email, $passwordHash);
         if (count($aResults) > 0) {
             $_SESSION['UserModel'] = new UserModel($aResults[0], $aResults[1], $email, $password);
             header("Location:../../View/index.php");

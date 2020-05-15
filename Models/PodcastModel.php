@@ -1,4 +1,5 @@
 <?php
+use Models;
 class PodcastModel {
     public $id;
     public $title;

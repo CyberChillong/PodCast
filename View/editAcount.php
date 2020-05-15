@@ -2,7 +2,7 @@
 <html>
 <link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
-require_once "../Models/UserModel.php";
+require "../Models/UserModel.php";
 session_start();
 if (isset($_SESSION['UserModel'])===false) {
     header("Location:../View/login.php");
