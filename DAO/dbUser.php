@@ -1,7 +1,8 @@
 <?php
-
-require_once "../Lib/dbConnection.php";
-
+//require_once "../Library/dbConnection.php";
+//require_once "../vendor/autoload.php";
+namespace DAO;
+use Library\dbConnection;
 class dbUser
 {
     private $db;
@@ -9,7 +10,7 @@ class dbUser
     function __construct()
     {
         $this->db = new dbConnection();
-    }
+    }//__construct
 
     function authentication($pStrEmail, $pStrPassword)
     {
