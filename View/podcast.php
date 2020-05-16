@@ -2,11 +2,18 @@
 require "../Models/UserModel.php";
 require "../Library/conteudoXML.php";
 session_start();
+$pathInfo = $_SERVER['PATH_INFO'];
+$pathInfo=substr($pathInfo,1);
+$ch = curl_init($pathInfo);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_NOBODY, 0);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$output = curl_exec($ch);
+curl_close($ch);
+file_put_contents('./das.mp3', $output);
 ?>
 <!DOCTYPE html>
 <html>
-
-<!--<link rel="stylesheet" type="text/css" href="./bottstrap/bootstrap.css">-->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <body>
@@ -34,45 +41,9 @@ session_start();
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/Podcast.php/ser">
-        <div class="row justify-content-center">
-            <div class="col-10">
-                <input type="text" name="searchExpression" id="searchExpression" placeholder="My Podcast"
-                       class=" form-control text-center">
-            </div>
-            <div class="col-2">
-                <input type="submit" class="btn btn-dark" value="Search">
-            </div>
-        </div>
-    </form>
-    <br>
     <?php
-    if (isset($_SESSION['Podcast'])) {
-        if ($_SESSION['Podcast'] !== null) {
-            $tabela = ' <table class="table">
-        <thead>
-        <tr>
-        <th scope="col">Titulo</th>
-        <th scope="col">Data de Publicação</th>
-        <th scope="col">Descricao</th>
-        <th scope="col">Ouvir</th>
-        </tr>
-        </thead>
-        <tbody>';
-            foreach ($_SESSION['Podcast'] as $podcast){
-            $tabela .= '<tr>'.'<td scope="row">'.$podcast->titulo.'</td >' .'<td >'.$podcast->dataDePublicacao.'</td >'.'<td >'.$podcast->descricao.'</td >'.'<td ><form action="'.$podcast->linkOriginal.'">
-        <div class="row justify-content-center">
-          <div class="col-2">
-                <input type="submit" class="btn btn-dark" value="Ouvir">
-            </div>
-        </div>
-    </form></td >'.'</tr>';
-            }
-            $tabela .= '</tbody></table>';
-            echo $tabela;
-        }
-    }
-    ?>
+    //file_put_contents( basename($pathInfo),file_get_contents($pathInfo));
+    echo '<audio controls><source src="'.$pathInfo.'" type="audio/ogg"></audio>'; ?>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
