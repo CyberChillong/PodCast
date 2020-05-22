@@ -2,15 +2,10 @@
 require "../Models/UserModel.php";
 require "../Library/conteudoXML.php";
 session_start();
-$pathInfo = $_SERVER['PATH_INFO'];
+$pathInfo = $_POST["l"];
 $pathInfo=substr($pathInfo,1);
-$ch = curl_init($pathInfo);
-curl_setopt($ch, CURLOPT_HEADER, 0);
-curl_setopt($ch, CURLOPT_NOBODY, 0);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$output = curl_exec($ch);
-curl_close($ch);
-file_put_contents('./das.mp3', $output);
+$pathInfo=explode(":/",$pathInfo);
+$caminhoParaOAudio="https://".$pathInfo[1];
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,9 +36,7 @@ file_put_contents('./das.mp3', $output);
         ?>
 </nav>
 <div class="container">
-    <?php
-    //file_put_contents( basename($pathInfo),file_get_contents($pathInfo));
-    echo '<audio controls><source src="'.$pathInfo.'" type="audio/ogg"></audio>'; ?>
+    <?php echo '<audio controls><source src="'.$caminhoParaOAudio.'" type="audio/ogg"></audio>'; ?>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
