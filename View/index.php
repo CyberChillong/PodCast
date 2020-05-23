@@ -49,6 +49,18 @@ session_start();
     <?php
     if (isset($_SESSION['Podcast'])) {
         if ($_SESSION['Podcast'] !== null) {
+            $numeroDePaginas= ((count($_SESSION['Podcast'])-1)/20);
+            if(is_integer($numeroDePaginas)===false){
+                $numeroDePaginas=(integer)($numeroDePaginas+1);
+            }
+            $obterNumeroDoUrl=$_SERVER["QUERY_STRING"];
+            $obterNumeroDoUrl=explode("=",$obterNumeroDoUrl);
+
+            if(count($obterNumeroDoUrl)===2){
+                $numeroDaPaginaAtual=(integer)$obterNumeroDoUrl[1];
+            }else{
+                $numeroDaPaginaAtual=1;
+            }
             $tabela = ' <table class="table">
         <thead>
         <tr>
@@ -59,20 +71,41 @@ session_start();
         </tr>
         </thead>
         <tbody>';
-            foreach ($_SESSION['Podcast'] as $podcast){
-            $tabela .= '<tr>'.'<td scope="row">'.$podcast->titulo.'</td >' .'<td >'.$podcast->dataDePublicacao.'</td >'.'<td >'.$podcast->descricao.'</td >'.'<td ><form action="'.$podcast->linkOriginal.'">
+            $podcast=null;
+            $numeroQueOForTemDeChegar=null;
+            $numeroDePodcastsRecolhidos=count($_SESSION['Podcast'])-1;
+            if($numeroDePodcastsRecolhidos<$numeroDaPaginaAtual*20){
+                $numeroQueOForTemDeChegar=$numeroDePodcastsRecolhidos;
+            }else{
+                $numeroQueOForTemDeChegar=$numeroDaPaginaAtual*20;
+            }
+            for ($i=(($numeroDaPaginaAtual-1)*20);$i<=$numeroQueOForTemDeChegar;$i++){
+                $podcast=$_SESSION['Podcast'][$i];
+            $tabela .= '<tr>'.'<td scope="row">'.$podcast->titulo.'</td >' .'<td >'.$podcast->dataDePublicacao.'</td >'.'<td >'.$podcast->descricao.'</td >'.'<td ><form method="post" action="./podcast.php">
         <div class="row justify-content-center">
           <div class="col-2">
-                <input type="submit" class="btn btn-dark" value="Ouvir">
+                <input name="l" style="visibility: hidden" value="'.$podcast->linkOriginal.'"></input>
+                <input type="submit" class="btn btn-dark"  value="Ouvir" >
             </div>
         </div>
     </form></td >'.'</tr>';
             }
             $tabela .= '</tbody></table>';
             echo $tabela;
+            echo '<nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">';
+            for($i=0;$i<$numeroDePaginas;$i++){
+                if($i+1===$numeroDaPaginaAtual){
+                    echo '<li class="page-item active"><a class="page-link" name="n" href="index.php?n='.($i+1).'">'.($i+1).'</a></li>';
+                }else{
+                    echo '<li class="page-item"><a class="page-link" name="n" href="index.php?n='.($i+1).'">'.($i+1).'</a></li>';
+                }
+            }
+            echo '</ul></nav>';
         }
     }
     ?>
+
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
