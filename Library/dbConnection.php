@@ -23,7 +23,21 @@ Class dbConnection {
        ibase_close($this->oDatabaseConnection);
        return $result;
    }
+    public function selectAllFromDB($pquery){
+        $arrayDeResultados=array();
+        $count = 0;
+        $this->oDatabaseConnection = ibase_connect($this->CONNECTION_STRING,self::DATABASE_USER,self::DATABASE_USER_PASSWORD);
+        $query=ibase_query($this->oDatabaseConnection,$pquery);
+        $resultado=ibase_fetch_assoc($query);
+        while ($resultado!==false ){
+            $arrayDeResultados[$count]=$resultado;
+            $resultado=ibase_fetch_assoc($query);
+            $count++;
+        } //while
+        return $arrayDeResultados;
+        ibase_close($this->oDatabaseConnection);
 
+    }
 }//dbConnection
 
 
