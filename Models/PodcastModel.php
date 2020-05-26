@@ -1,5 +1,5 @@
 <?php
-use Models;
+namespace Models;
 class PodcastModel {
     public $id;
     public $title;

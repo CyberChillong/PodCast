@@ -2,10 +2,19 @@
 require "../Models/UserModel.php";
 require "../Library/conteudoXML.php";
 session_start();
-$pathInfo = $_POST["l"];
+$pathInfo = $_POST["p"];
 $pathInfo=substr($pathInfo,1);
 $pathInfo=explode(":/",$pathInfo);
 $caminhoParaOAudio="https://".$pathInfo[1];
+if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
+    header("Location:../Controller/Podcast.php/hist/".$caminhoParaOAudio);
+}else{
+    if($_SESSION["pathOfPodcastAddedToHistList"]===null){
+        header("Location:../Controller/Podcast.php/hist/".$caminhoParaOAudio);
+    }else{
+        $_SESSION["pathOfPodcastAddedToHistList"]=null;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,6 +38,7 @@ $caminhoParaOAudio="https://".$pathInfo[1];
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">
+            <a href="./myListOfPodcasts.php" class="nav-item nav-link">My Lists of Podcasts</a>    
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             </div>';

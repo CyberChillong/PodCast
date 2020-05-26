@@ -1,7 +1,11 @@
 <?php
 require "../Models/UserModel.php";
+require "../Models/ListsModel.php";
 require "../Library/conteudoXML.php";
 session_start();
+if (isset($_SESSION['UserModel']) === false) {
+    header("Location:../../View/index.php");
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,22 +39,10 @@ session_start();
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/Podcast.php/ser">
-        <div class="row justify-content-center">
-            <div class="col-10">
-                <input type="text" name="searchExpression" id="searchExpression" placeholder="My Podcast"
-                       class=" form-control text-center">
-            </div>
-            <div class="col-2">
-                <input type="submit" class="btn btn-dark" value="Search">
-            </div>
-        </div>
-    </form>
-    <br>
     <?php
-    if (isset($_SESSION['Podcast'])) {
-        if ($_SESSION['Podcast'] !== null) {
-            $numeroDePaginas= ((count($_SESSION['Podcast'])-1)/20);
+    if (isset($_SESSION['UserListOfPodcasts'])&&isset($_SESSION['UsernumberOfPodcastsOnTheList'])) {
+        if ($_SESSION['UserListOfPodcasts'] !== null&&$_SESSION['UsernumberOfPodcastsOnTheList']!==null) {
+            $numeroDePaginas= ((count($_SESSION['UserListOfPodcasts'])-1)/20);
             if(is_integer($numeroDePaginas)===false){
                 $numeroDePaginas=(integer)($numeroDePaginas+1);
             }
@@ -66,27 +58,26 @@ session_start();
         <thead>
         <tr>
         <th scope="col">Titulo</th>
-        <th scope="col">Data de Publicação</th>
-        <th scope="col">Descricao</th>
-        <th scope="col">Ouvir</th>
+        <th scope="col">Number Of Podcasts On The List</th>
+        <th scope="col"></th>
         </tr>
         </thead>
         <tbody>';
             $podcast=null;
             $numeroQueOForTemDeChegar=null;
-            $numeroDePodcastsRecolhidos=count($_SESSION['Podcast'])-1;
+            $numeroDePodcastsRecolhidos=count($_SESSION['UserListOfPodcasts'])-1;
             if($numeroDePodcastsRecolhidos<$numeroDaPaginaAtual*20){
                 $numeroQueOForTemDeChegar=$numeroDePodcastsRecolhidos;
             }else{
                 $numeroQueOForTemDeChegar=$numeroDaPaginaAtual*20;
             }
             for ($i=(($numeroDaPaginaAtual-1)*20);$i<=$numeroQueOForTemDeChegar;$i++){
-                $podcast=$_SESSION['Podcast'][$i];
-            $tabela .= '<tr>'.'<td scope="row">'.$podcast->titulo.'</td >' .'<td >'.$podcast->dataDePublicacao.'</td >'.'<td >'.$podcast->descricao.'</td >'.'<td ><form method="post" action="./podcast.php">
+                $podcast=$_SESSION['UserListOfPodcasts'][$i];
+                $tabela .= '<tr>'.'<td scope="row">'.$podcast->strName.'</td >'.'<td>'.$_SESSION['UsernumberOfPodcastsOnTheList'][$i].'</td><td ><form method="post" action="../Controller/Podcast.php/getListPodcast">
         <div class="row justify-content-center">
           <div class="col-6">
-                <input name="p" style="visibility: hidden" value="'.$podcast->linkOriginal.'"></input>
-                <input type="submit" class="btn btn-dark"  value="Ouvir" >
+                <input name="l" style="visibility: hidden" value="'.$podcast->strId.'"></input>
+                <input type="submit" class="btn btn-dark"  value="Open" >
             </div>
         </div>
     </form></td >'.'</tr>';
@@ -121,3 +112,4 @@ session_start();
 </div>
 </body>
 </html>
+

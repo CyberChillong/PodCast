@@ -26,6 +26,14 @@ class dbList {
         foreach ($Rows as $row){
             array_push($UserListObjects, new ListsModel($row["ID"],$row["NAME"]));
         }//foreach
+        return $UserListObjects;
+    }//getUserLists
+    public function getUserListByUserIDAndName($UserId,$Name){
+        $UserListObjects = [];
+        $Rows = $this->db->selectAllFromDB(sprintf("SELECT ID FROM LISTS WHERE USERS_ID= %s AND NAME=%s",$UserId,$Name));
+        foreach ($Rows as $row){
+            array_push($UserListObjects, new ListsModel($row["ID"],$Name));
+        }//foreach
 
         return $UserListObjects;
 

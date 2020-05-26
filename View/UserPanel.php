@@ -30,6 +30,8 @@ session_start();?>
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">
+            <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
+            <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             </div>';
         }
