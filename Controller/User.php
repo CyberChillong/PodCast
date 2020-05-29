@@ -15,16 +15,20 @@ class User
     {
         session_start();
         $email = strtolower($_POST['email']);
-        $password = strtolower($_POST['password']);
+        $password = $_POST['password'];
         $username = strtolower($_POST['username']);
-        $password = hash("md5", strtolower($password));
-        $email = strtolower($email);
+        $password = hash("md5", $password);
+        if($this->dbUser->isPasswordUnique($password)&&$this->dbUser->isUsernameUnique($username)&&$this->dbUser->isEmailUnique($email)){
         $resultado = $this->dbUser->makeUserRegistration($username, $password, $email);
         if ($resultado === true) {
             $_SESSION['RegistrationStatus'] = "Your registrations was made whit success, now you can made the login";
             header("Location:../../View/login.php");
         } else {
             $_SESSION['RegistrationStatus'] = "You have failed the registration process please repeat and verify your data";
+            header("Location:../../View/registar.php");
+        }
+        }else {
+            $_SESSION['RegistrationStatus'] = "You have failed the registration process because your data is already being used";
             header("Location:../../View/registar.php");
         }
     }//registar
@@ -40,7 +44,7 @@ class User
             $_SESSION['UserModel'] = new UserModel($aResults[0], $aResults[1], $email, $password);
             header("Location:../../View/index.php");
         } else {
-            $_SESSION['LoginStatus'] = "Your Logging has fail verify your credentials our create an account";
+            $_SESSION['LoginStatus'] = "Your Logging has fail verify your credentials our create an account our account is desable";
             header("Location:../../View/login.php");
 
         }
@@ -51,10 +55,9 @@ class User
     {
         session_start();
         $email = strtolower($_POST['email']);
-        $password = strtolower($_POST['password']);
+        $password = $_POST['password'];
         $username = strtolower($_POST['username']);
-        $passwordHash = hash("md5", strtolower($password));
-        $email = strtolower($email);
+        $passwordHash = hash("md5", $password);
         $id = $_SESSION["UserModel"]->id;
         $_SESSION['EditAccountStatus'] = null;
         if ($email !== $_SESSION["UserModel"]->emails) {
@@ -92,6 +95,13 @@ class User
     }//editarConta
 
 
+    private function desativarUser(){
+        session_start();
+        $id = $_SESSION["UserModel"]->id;
+        $this->dbUser->deactiveUser($id);
+        session_destroy();
+        header("Location:../../View/index.php");
+    }
     public function escolha()
     {
         $pathInfo = $_SERVER['PATH_INFO'];
@@ -102,6 +112,8 @@ class User
             $this->login();
         } else if ($pathInfo[1] === "edit") {
             $this->editar();
+        } else if ($pathInfo[1] === "deac") {
+            $this->desativarUser();
         }
     }
 }

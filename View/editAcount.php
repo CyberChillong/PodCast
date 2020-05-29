@@ -24,8 +24,10 @@ if (isset($_SESSION['UserModel'])===false) {
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">
-            <a href="./editAcount.php" class="nav-item nav-link">Edit Account</a>
+            <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
+            <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
+            <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
             </div>';
         }
         ?>

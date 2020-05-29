@@ -34,6 +34,7 @@ if (isset($_SESSION['UserModel']) === false) {
             <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
+            <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
             </div>';
         }
         ?>

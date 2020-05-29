@@ -15,7 +15,7 @@ class dbuser
     function authentication($pStrEmail, $pStrPassword)
     {
         $aUserInfo = [];
-        $strQuery = sprintf("SELECT ID, USERNAME FROM USERS WHERE EMAILS= '%s' AND PASSWORD = '%s' ", $pStrEmail,$pStrPassword);
+        $strQuery = sprintf("SELECT ID, USERNAME FROM USERS WHERE EMAILS= '%s' AND PASSWORD = '%s' AND ACTIVE=1 ", $pStrEmail,$pStrPassword);
         $oQueryResults = $this->db->selectDB($strQuery);
         if ($oQueryResults != null) { //if the query result is different than null
             foreach ($oQueryResults as $Result) {
@@ -27,6 +27,11 @@ class dbuser
 
     function updateUserEmail($pUserId ,$pNewEmail){
         $strQuery = sprintf("UPDATE USERS SET EMAILS= '%s' WHERE ID = '%f'", $pNewEmail, $pUserId);
+        $this->db->insertUpdateDeleteDB($strQuery);
+    }//updateUserEmail
+
+    function deactiveUser($pUserId ){
+        $strQuery = sprintf("UPDATE USERS SET ACTIVE= 0 WHERE ID = '%f'" , $pUserId);
         $this->db->insertUpdateDeleteDB($strQuery);
     }//updateUserEmail
 
@@ -90,7 +95,7 @@ class dbuser
         $bIsThisUsernameUnique = $this->isUsernameUnique($pStrUsername);
         $bIsThisEmailUnique = $this->isEmailUnique($pStrEmail);
         if (($bIsThisPasswordUnique && $bIsThisEmailUnique && $bIsThisUsernameUnique) === true) {
-            $strQuery = sprintf("INSERT INTO USERS(USERNAME, PASSWORD ,EMAILS ) VALUES ('%s', '%s','%s') ",
+            $strQuery = sprintf("INSERT INTO USERS(USERNAME, PASSWORD ,EMAILS, ACTIVE) VALUES ('%s', '%s','%s',1) ",
                 $pStrUsername, $pStrPasswordHash, $pStrEmail);
             $this->db->insertUpdateDeleteDB($strQuery);
             return true;

@@ -103,6 +103,12 @@ class Podcast
             $verificationIfPodcastExists = $this->dbPodcast->getPodCastFromSource($caminhoParaOAudio);
             if (count($verificationIfPodcastExists) === 0) {
                 //Falta fazer insert na base de dados do podcasts
+                $atualPodcast=0;
+                while($_SESSION['Podcast'][$atualPodcast]->linkOriginal!==$caminhoParaOAudio){
+                    $atualPodcast++;
+                }
+                echo var_dump($_SESSION['Podcast'][$atualPodcast]->linkOriginal);
+                echo var_dump($caminhoParaOAudio);
             } else {
                 $podcastID = $verificationIfPodcastExists[0]["ID"];
                 $idUser = $_SESSION['UserModel']->id;
@@ -114,7 +120,7 @@ class Podcast
                 $idOfHystoricList = $verificationIfListofHistoryOfUserIfCreated[0]->strId;
                 $this->dbListPodcast->InsertPodcastOnList($idOfHystoricList, $podcastID);
                 $_SESSION["pathOfPodcastAddedToHistList"]=$caminhoParaOAudio;
-                header("Location:../../podcast.php");
+             //   header("Location:../../podcast.php");
             }
         }
     }
