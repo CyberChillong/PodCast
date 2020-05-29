@@ -22,6 +22,17 @@ class dbPodcast {
 
     }//insertPodcast
 
+    public function getPodCastFromId($podcastId){
+
+        return $this->db->selectAllFromDB(sprintf("SELECT TITULO,AUTHOR,DATES,SOURCES FROM PODCASTS WHERE ID= %s",$podcastId));
+
+    }//getPodcastFromId
+    public function getPodCastFromSource($podcastSource){
+
+        return $this->db->selectAllFromDB('SELECT ID FROM PODCASTS WHERE SOURCES= '.$podcastSource.'');
+
+    }//getPodcastFromId
+
 
 }//dbPodcast
 

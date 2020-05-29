@@ -1,6 +1,7 @@
 <?php
 require "../Models/UserModel.php";
 require "../Library/conteudoXML.php";
+require "../Models/PodcastModel.php";
 session_start();
 ?>
 <!DOCTYPE html>
@@ -9,8 +10,7 @@ session_start();
 <!--<link rel="stylesheet" type="text/css" href="./bottstrap/bootstrap.css">-->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<body><nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -36,22 +36,10 @@ session_start();
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/Podcast.php/ser">
-        <div class="row justify-content-center">
-            <div class="col-10">
-                <input type="text" name="searchExpression" id="searchExpression" placeholder="My Podcast"
-                       class=" form-control text-center">
-            </div>
-            <div class="col-2">
-                <input type="submit" class="btn btn-dark" value="Search">
-            </div>
-        </div>
-    </form>
-    <br>
     <?php
-    if (isset($_SESSION['Podcast'])) {
-        if ($_SESSION['Podcast'] !== null) {
-            $numeroDePaginas= ((count($_SESSION['Podcast'])-1)/20);
+    if (isset($_SESSION['UserPodcastOfList'])) {
+        if ($_SESSION['UserPodcastOfList'] !== null) {
+            $numeroDePaginas= ((count($_SESSION['UserPodcastOfList'])-1)/20);
             if(is_integer($numeroDePaginas)===false){
                 $numeroDePaginas=(integer)($numeroDePaginas+1);
             }
@@ -75,18 +63,18 @@ session_start();
         <tbody>';
             $podcast=null;
             $numeroQueOForTemDeChegar=null;
-            $numeroDePodcastsRecolhidos=count($_SESSION['Podcast'])-1;
+            $numeroDePodcastsRecolhidos=count($_SESSION['UserPodcastOfList'])-1;
             if($numeroDePodcastsRecolhidos<$numeroDaPaginaAtual*20){
                 $numeroQueOForTemDeChegar=$numeroDePodcastsRecolhidos;
             }else{
                 $numeroQueOForTemDeChegar=$numeroDaPaginaAtual*20;
             }
             for ($i=(($numeroDaPaginaAtual-1)*20);$i<=$numeroQueOForTemDeChegar;$i++){
-                $podcast=$_SESSION['Podcast'][$i];
-            $tabela .= '<tr>'.'<td scope="row">'.$podcast->titulo.'</td >' .'<td >'.$podcast->dataDePublicacao.'</td >'.'<td >'.$podcast->descricao.'</td >'.'<td ><form method="post" action="./podcast.php">
+                $podcast=$_SESSION['UserPodcastOfList'][$i];
+                $tabela .= '<tr>'.'<td scope="row">'.$podcast->title.'</td >' .'<td >'.$podcast->date.'</td >'.'<td >'.$podcast->author.'</td >'.'<td ><form method="post" action="./podcast.php">
         <div class="row justify-content-center">
           <div class="col-6">
-                <input name="p" style="visibility: hidden" value="'.$podcast->linkOriginal.'"></input>
+                <input name="p" style="visibility: hidden" value="'.$podcast->source.'"></input>
                 <input type="submit" class="btn btn-dark"  value="Ouvir" >
             </div>
         </div>
