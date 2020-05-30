@@ -1,7 +1,6 @@
 <?php
 require "../Models/UserModel.php";
 require "../Models/ListsModel.php";
-require "../Library/conteudoXML.php";
 session_start();
 if (isset($_SESSION['UserModel']) === false) {
     header("Location:../../View/index.php");
@@ -44,7 +43,7 @@ if (isset($_SESSION['UserModel']) === false) {
     if (isset($_SESSION['UserListOfPodcasts'])&&isset($_SESSION['UsernumberOfPodcastsOnTheList'])) {
         if ($_SESSION['UserListOfPodcasts'] !== null&&$_SESSION['UsernumberOfPodcastsOnTheList']!==null) {
             $numeroDePaginas= ((count($_SESSION['UserListOfPodcasts'])-1)/20);
-            if(is_integer($numeroDePaginas)===false){
+           if(is_integer($numeroDePaginas)===false||$numeroDePaginas===0){
                 $numeroDePaginas=(integer)($numeroDePaginas+1);
             }
             $obterNumeroDoUrl=$_SERVER["QUERY_STRING"];
@@ -89,9 +88,9 @@ if (isset($_SESSION['UserModel']) === false) {
         <ul class="pagination justify-content-center">';
             for($i=0;$i<$numeroDePaginas;$i++){
                 if($i+1===$numeroDaPaginaAtual){
-                    echo '<li class="page-item active"><a class="page-link" name="n" href="index.php?n='.($i+1).'">'.($i+1).'</a></li>';
+                    echo '<li class="page-item active"><a class="page-link" name="n" href="ListsOfPodcasts.php?n='.($i+1).'">'.($i+1).'</a></li>';
                 }else{
-                    echo '<li class="page-item"><a class="page-link" name="n" href="index.php?n='.($i+1).'">'.($i+1).'</a></li>';
+                    echo '<li class="page-item"><a class="page-link" name="n" href="ListsOfPodcasts.php?n='.($i+1).'">'.($i+1).'</a></li>';
                 }
             }
             echo '</ul></nav>';
