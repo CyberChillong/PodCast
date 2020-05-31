@@ -125,6 +125,16 @@ class Podcast
         }
     }
 
+    public function changeListName($strListName , $strListId){
+        session_start();
+        if (isset($_SESSION['UserModel']) !== false) {
+            $idUser = $_SESSION['UserModel']->id;
+            if($idUser !== null && $strListId !== "" && $strListName !== ""){
+                $this->dbList->nameUpdate($strListId , $strListName);
+            }//if
+        }//if
+    }//changeListName
+
     public function escolha()
     {
         $pathInfo = $_SERVER['PATH_INFO'];
@@ -137,6 +147,8 @@ class Podcast
             $this->getMyPodcastsOfList();
         } else if ($pathInfo[1] === "hist") {
             $this->insertHistoric($pathInfo);
+        } else if($pathInfo[1] === "mudarNome"){
+            $this->$this->changeListName($pathInfo[2] , $pathInfo[3]);
         }
     }
 

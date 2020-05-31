@@ -28,6 +28,7 @@ class dbList {
         }//foreach
         return $UserListObjects;
     }//getUserLists
+
     public function getUserListByUserIDAndName($UserId,$Name){
         $UserListObjects = [];
         $Rows = $this->db->selectAllFromDB(sprintf("SELECT ID FROM LISTS WHERE USERS_ID= %s AND NAME=%s",$UserId,$Name));
@@ -44,9 +45,7 @@ class dbList {
 
     }//NameUpdate
 
-
-
 }//List
 
 $o = new dbList();
-$o->nameUpdate("5", "tarzan");
+$o->nameUpdate("1", "Dario");
