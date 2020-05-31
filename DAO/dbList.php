@@ -28,6 +28,7 @@ class dbList {
         }//foreach
         return $UserListObjects;
     }//getUserLists
+
     public function getUserListByUserIDAndName($UserId,$Name){
         $UserListObjects = [];
 
@@ -47,6 +48,7 @@ class dbList {
 
     }//NameUpdate
 
-
-
 }//List
+
+
+

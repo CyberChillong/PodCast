@@ -60,6 +60,7 @@ if (isset($_SESSION['UserModel']) === false) {
         <th scope="col">Titulo</th>
         <th scope="col">Number Of Podcasts On The List</th>
         <th scope="col"></th>
+        <th scope="col"></th>
         </tr>
         </thead>
         <tbody>';
@@ -78,6 +79,23 @@ if (isset($_SESSION['UserModel']) === false) {
           <div class="col-6">
                 <input name="l" style="visibility: hidden" value="'.$podcast->strId.'"></input>
                 <input type="submit" class="btn btn-dark"  value="Open" >
+            </div>
+        </div>
+    </form></td ><td ><form method="post" action="../Controller/Podcast.php/mudarNome">
+        <div class="row justify-content-center">
+          <div class="col-6">
+                <input name="2" value="'.$podcast->strId.'"></input>                
+                <input type="submit" class="btn btn-dark"  value="edit name" onsubmit="redirect(.$podcast->strId.)" >
+                <script type="text/javascript"> function redirect($strId) {
+
+        let optionToCreateList = window.document.getElementById("createList");
+
+            optionToCreateList.addEventListener("click", function () {
+            var nameOfList=prompt("What is the name of list?");
+            window.location.replace(  "../Controller/Podcast.php/newList/"+nameOfList + $strId);
+        });
+    }
+</script>
             </div>
         </div>
     </form></td >'.'</tr>';
