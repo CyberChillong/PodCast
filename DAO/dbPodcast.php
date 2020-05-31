@@ -16,7 +16,7 @@ class dbPodcast {
 
     public function insertPodcast ($pTitle, $pAuthor, $pDate, $pSources){
 
-        $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO PODCASTS (TITULO, AUTHOR, DATES, SOURCES) VALUES ('%s', '%s', '%s', '%s');",
+        $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO PODCASTS (TITLE, DESCRIPTION, DATES, SOURCES) VALUES ('%s', '%s', '%s', '%s');",
         $pTitle, $pAuthor, $pDate, $pSources));
 
 
@@ -24,12 +24,12 @@ class dbPodcast {
 
     public function getPodCastFromId($podcastId){
 
-        return $this->db->selectAllFromDB(sprintf("SELECT TITULO,AUTHOR,DATES,SOURCES FROM PODCASTS WHERE ID= %s",$podcastId));
+        return $this->db->selectAllFromDB(sprintf("SELECT TITLE,DISCRIPTION,DATES,SOURCES FROM PODCASTS WHERE ID= %s",$podcastId));
 
     }//getPodcastFromId
     public function getPodCastFromSource($podcastSource){
 
-        return $this->db->selectAllFromDB('SELECT ID FROM PODCASTS WHERE SOURCES= '.$podcastSource.'');
+        return $this->db->selectAllFromDB("SELECT ID FROM PODCASTS WHERE SOURCES= '.$podcastSource.'");
 
     }//getPodcastFromId
 

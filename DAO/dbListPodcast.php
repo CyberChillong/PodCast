@@ -28,7 +28,7 @@ class dbListPodcast{
 
     public function cointPodCastFromLists($ListId){
 
-        return $this->db->selectAllFromDB(sprintf("SELECT count(ID) FROM LISTPODCAST WHERE lIST_ID= %s",$ListId));
+        return $this->db->selectAllFromDB(sprintf("SELECT count(ID) FROM LISTPODCAST WHERE lIST_ID= '%s'",$ListId));
 
     }//getUserLists
 

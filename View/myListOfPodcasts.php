@@ -74,7 +74,7 @@ if (isset($_SESSION['UserModel']) === false) {
             }
             for ($i=(($numeroDaPaginaAtual-1)*20);$i<=$numeroQueOForTemDeChegar;$i++){
                 $podcast=$_SESSION['UserListOfPodcasts'][$i];
-                $tabela .= '<tr>'.'<td scope="row">'.$podcast->strName.'</td >'.'<td>'.$_SESSION['UsernumberOfPodcastsOnTheList'][$i].'</td><td ><form method="post" action="../Controller/Podcast.php/getListPodcast">
+                $tabela .= '<tr>'.'<td scope="row">'.$podcast->strName.'</td >'.'<td>'.$_SESSION['UserNumberOfPodcastsOnTheList'][$i].'</td><td ><form method="post" action="../Controller/Podcast.php/getListPodcast">
         <div class="row justify-content-center">
           <div class="col-6">
                 <input name="l" style="visibility: hidden" value="'.$podcast->strId.'"></input>
