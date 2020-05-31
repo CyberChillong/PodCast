@@ -1,19 +1,30 @@
 <?php
 require "../Models/UserModel.php";
-require "../Library/conteudoXML.php";
 session_start();
-$pathInfo = $_POST["p"];
-$pathInfo=substr($pathInfo,1);
-$pathInfo=explode(":/",$pathInfo);
-$caminhoParaOAudio="https://".$pathInfo[1];
-if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
-    header("Location:../Controller/Podcast.php/hist/".$caminhoParaOAudio);
-}else{
-    if($_SESSION["pathOfPodcastAddedToHistList"]===null){
-        header("Location:../Controller/Podcast.php/hist/".$caminhoParaOAudio);
-    }else{
-        $_SESSION["pathOfPodcastAddedToHistList"]=null;
+if (isset($_SESSION['UserModel']) !== false) {
+    if (isset($_SESSION["pathOfPodcastAddedToHistList"]) !== false) {
+        if ($_SESSION["pathOfPodcastAddedToHistList"] === "0" || $_SESSION["pathOfPodcastAddedToHistList"] === NULL) {
+            $pathInfo = $_POST["p"];
+            $pathInfo = substr($pathInfo, 1);
+            $pathInfo = explode(":/", $pathInfo);
+            $pathToAudio = "http://" . $pathInfo[1];
+            header("Location:../Controller/Podcast.php/hist/" . $pathToAudio);
+        } else {
+            $pathToAudio = $_SESSION["pathOfPodcastAddedToHistList"];
+            $_SESSION["pathOfPodcastAddedToHistList"] = "0";
+        }
+    } else {
+        $pathInfo = $_POST["p"];
+        $pathInfo = substr($pathInfo, 1);
+        $pathInfo = explode(":/", $pathInfo);
+        $pathToAudio = "http://" . $pathInfo[1];
+        header("Location:../Controller/Podcast.php/hist/" . $pathToAudio);
     }
+} else {
+    $pathInfo = $_POST["p"];
+    $pathInfo = substr($pathInfo, 1);
+    $pathInfo = explode(":/", $pathInfo);
+    $pathToAudio = "http://" . $pathInfo[1];
 }
 ?>
 <!DOCTYPE html>
@@ -47,7 +58,7 @@ if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
         ?>
 </nav>
 <div class="container">
-    <?php echo '<audio controls><source src="'.$caminhoParaOAudio.'" type="audio/ogg"></audio>'; ?>
+    <?php echo '<audio controls><source src="' . $pathToAudio . '" type="audio/ogg"></audio>'; ?>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

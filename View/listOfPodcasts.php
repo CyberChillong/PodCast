@@ -1,20 +1,14 @@
 <?php
 require "../Models/UserModel.php";
-require "../Models/ListsModel.php";
-require "../Library/conteudoXML.php";
+require "../Models/PodcastModel.php";
 session_start();
-if (isset($_SESSION['UserModel']) === false) {
-    header("Location:../../View/index.php");
-}
+$_SESSION['whereItComes']='l';
 ?>
 <!DOCTYPE html>
 <html>
-
-<!--<link rel="stylesheet" type="text/css" href="./bottstrap/bootstrap.css">-->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<body><nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -41,10 +35,10 @@ if (isset($_SESSION['UserModel']) === false) {
 </nav>
 <div class="container">
     <?php
-    if (isset($_SESSION['UserListOfPodcasts'])&&isset($_SESSION['UsernumberOfPodcastsOnTheList'])) {
-        if ($_SESSION['UserListOfPodcasts'] !== null&&$_SESSION['UsernumberOfPodcastsOnTheList']!==null) {
-            $numeroDePaginas= ((count($_SESSION['UserListOfPodcasts'])-1)/20);
-            if(is_integer($numeroDePaginas)===false){
+    if (isset($_SESSION['UserPodcastOfList'])) {
+        if ($_SESSION['UserPodcastOfList'] !== null) {
+            $numeroDePaginas= ((count($_SESSION['UserPodcastOfList'])-1)/20);
+            if(is_integer($numeroDePaginas)===false||$numeroDePaginas===0){
                 $numeroDePaginas=(integer)($numeroDePaginas+1);
             }
             $obterNumeroDoUrl=$_SERVER["QUERY_STRING"];
@@ -59,26 +53,27 @@ if (isset($_SESSION['UserModel']) === false) {
         <thead>
         <tr>
         <th scope="col">Titulo</th>
-        <th scope="col">Number Of Podcasts On The List</th>
-        <th scope="col"></th>
+        <th scope="col">Data de Publicação</th>
+        <th scope="col">Descricao</th>
+        <th scope="col">Ouvir</th>
         </tr>
         </thead>
         <tbody>';
             $podcast=null;
             $numeroQueOForTemDeChegar=null;
-            $numeroDePodcastsRecolhidos=count($_SESSION['UserListOfPodcasts'])-1;
+            $numeroDePodcastsRecolhidos=count($_SESSION['UserPodcastOfList'])-1;
             if($numeroDePodcastsRecolhidos<$numeroDaPaginaAtual*20){
                 $numeroQueOForTemDeChegar=$numeroDePodcastsRecolhidos;
             }else{
                 $numeroQueOForTemDeChegar=$numeroDaPaginaAtual*20;
             }
             for ($i=(($numeroDaPaginaAtual-1)*20);$i<=$numeroQueOForTemDeChegar;$i++){
-                $podcast=$_SESSION['UserListOfPodcasts'][$i];
-                $tabela .= '<tr>'.'<td scope="row">'.$podcast->strName.'</td >'.'<td>'.$_SESSION['UserNumberOfPodcastsOnTheList'][$i].'</td><td ><form method="post" action="../Controller/Podcast.php/getListPodcast">
+                $podcast=$_SESSION['UserPodcastOfList'][$i];
+                $tabela .= '<tr>'.'<td scope="row">'.$podcast->title.'</td >' .'<td >'.$podcast->date.'</td >'.'<td >'.$podcast->description.'</td >'. '<td ><form method="post" action="listenerPodcast.php">
         <div class="row justify-content-center">
           <div class="col-6">
-                <input name="l" style="visibility: hidden" value="'.$podcast->strId.'"></input>
-                <input type="submit" class="btn btn-dark"  value="Open" >
+                <input name="p" style="visibility: hidden" value="' .$podcast->source.'"></input>
+                <input type="submit" class="btn btn-dark"  value="Ouvir" >
             </div>
         </div>
     </form></td >'.'</tr>';
@@ -89,9 +84,9 @@ if (isset($_SESSION['UserModel']) === false) {
         <ul class="pagination justify-content-center">';
             for($i=0;$i<$numeroDePaginas;$i++){
                 if($i+1===$numeroDaPaginaAtual){
-                    echo '<li class="page-item active"><a class="page-link" name="n" href="index.php?n='.($i+1).'">'.($i+1).'</a></li>';
+                    echo '<li class="page-item active"><a class="page-link" name="n" href="listOfPodcasts.php?n='.($i+1).'">'.($i+1).'</a></li>';
                 }else{
-                    echo '<li class="page-item"><a class="page-link" name="n" href="index.php?n='.($i+1).'">'.($i+1).'</a></li>';
+                    echo '<li class="page-item"><a class="page-link" name="n" href="listOfPodcasts.php?n='.($i+1).'">'.($i+1).'</a></li>';
                 }
             }
             echo '</ul></nav>';
@@ -113,4 +108,3 @@ if (isset($_SESSION['UserModel']) === false) {
 </div>
 </body>
 </html>
-

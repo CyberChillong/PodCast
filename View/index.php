@@ -1,12 +1,12 @@
 <?php
 require "../Models/UserModel.php";
-require "../Library/conteudoXML.php";
+require "../Models/PodcastModel.php";
 session_start();
+$_SESSION['whereItComes']='i';
 ?>
 <!DOCTYPE html>
 <html>
 
-<!--<link rel="stylesheet" type="text/css" href="./bottstrap/bootstrap.css">-->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <body>
@@ -52,7 +52,7 @@ session_start();
     if (isset($_SESSION['Podcast'])) {
         if ($_SESSION['Podcast'] !== null) {
             $numeroDePaginas= ((count($_SESSION['Podcast'])-1)/20);
-            if(is_integer($numeroDePaginas)===false){
+            if(is_integer($numeroDePaginas)===false||$numeroDePaginas===0){
                 $numeroDePaginas=(integer)($numeroDePaginas+1);
             }
             $obterNumeroDoUrl=$_SERVER["QUERY_STRING"];
@@ -83,10 +83,10 @@ session_start();
             }
             for ($i=(($numeroDaPaginaAtual-1)*20);$i<=$numeroQueOForTemDeChegar;$i++){
                 $podcast=$_SESSION['Podcast'][$i];
-            $tabela .= '<tr>'.'<td scope="row">'.$podcast->titulo.'</td >' .'<td >'.$podcast->dataDePublicacao.'</td >'.'<td >'.$podcast->descricao.'</td >'.'<td ><form method="post" action="./podcast.php">
+            $tabela .= '<tr>'.'<td scope="row">'.$podcast->title.'</td >' .'<td >'.$podcast->date.'</td >'.'<td >'.$podcast->description.'</td >'. '<td ><form method="post" action="listenerPodcast.php">
         <div class="row justify-content-center">
           <div class="col-6">
-                <input name="p" style="visibility: hidden" value="'.$podcast->linkOriginal.'"></input>
+                <input name="p" style="visibility: hidden" value="' .$podcast->source.'"></input>
                 <input type="submit" class="btn btn-dark"  value="Ouvir" >
             </div>
         </div>

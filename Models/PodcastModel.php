@@ -3,15 +3,15 @@ namespace Models;
 class PodcastModel {
     public $id;
     public $title;
-    public $author;
+    public $description;
     public $date;
     public $source;
 
-    public function __construct($pId, $pTitle, $pAuthor, $pDate, $pSource)
+    public function __construct($pId, $pTitle, $pDescription, $pDate, $pSource)
     {
         $this->id=$pId;
         $this->title=$pTitle;
-        $this->author=$pAuthor;
+        $this->description=$pDescription;
         $this->date=$pDate;
         $this->source=$pSource;
 
