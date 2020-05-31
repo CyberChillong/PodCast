@@ -1,6 +1,7 @@
 <?php
 namespace Library;
-use Library;
+use Models\PodcastModel;
+
 class anchorfm
 {
     private $oJsonresponse;
@@ -16,7 +17,7 @@ class anchorfm
         $this->oJsonresponse = json_decode(file_get_contents(sprintf("https://itunes.apple.com/search?media=podcast&term=%s", $pstrKeyWord)), "true");
         $aXmlResponse = simplexml_load_string(file_get_contents($this->oJsonresponse["results"][0]["feedUrl"]));
         foreach ($aXmlResponse->channel->item as $aItems) {
-            $oRsult = new Library\conteudoXML((string)$aItems->pubDate,(string)$aItems->description,(string)$aItems->title,(string)$aItems->enclosure["url"]);
+            $oRsult = new PodcastModel(0,(string)$aItems->title,(string)$aItems->description,(string)$aItems->pubDate,(string)$aItems->enclosure["url"]);
             array_push($this->aSavedXMLData, $oRsult);
         }
         return $this->aSavedXMLData;
