@@ -6,7 +6,16 @@ require "../Models/UserModel.php";
 session_start();
 if (isset($_SESSION['UserModel'])===false) {
     header("Location:../View/login.php");
-} ?>
+}
+if (isset($_SESSION['listCreated']) !== false) {
+    if ($_SESSION['listCreated'] === true) {
+        echo '<script>alert("New list created")</script>';
+    } else {
+        echo '<script>alert("A list with the name given already exists on your account")</script>';
+    }
+    $_SESSION['listCreated'] = NULL;
+}
+?>
 <body><nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -25,6 +34,7 @@ if (isset($_SESSION['UserModel'])===false) {
         } else {
             echo '<div class="navbar-nav ml-auto">
             <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
+            <a  id="createList" class="nav-item nav-link" onclick="redirect()">New List</a>
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
@@ -64,3 +74,4 @@ if (isset($_SESSION['UserModel'])===false) {
 </div>
 </body>
 </html>
+<script src="javascript.js"></script>

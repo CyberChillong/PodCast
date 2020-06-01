@@ -16,8 +16,8 @@ class dbListPodcast{
          $this->db = new dbConnection();
     }//__construct
 
-    public function InsertPodcastOnList($pListId, $pPodcastId){
-        $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO LISTPODCAST (LIST_ID, PODCAST_ID) VALUES ('%s', '%s' );",$pListId,$pPodcastId));
+    public function InsertPodcastOnList($pListId, $pPodcastId,$date){
+        $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO LISTPODCAST (LIST_ID, PODCAST_ID,ACTIVE,DATEINSERTION) VALUES ('%s', '%s',1, '%s' );",$pListId,$pPodcastId,$date));
     }//createList
 
     public function getPodCastFromLists($ListId){
@@ -25,8 +25,13 @@ class dbListPodcast{
          return $this->db->selectAllFromDB(sprintf("SELECT PODCAST_ID FROM LISTPODCAST WHERE lIST_ID= %s",$ListId));
 
     }//getUserLists
+    public function getPodCastFromListsIdAndPodcastId($ListId,$podcastId){
 
-    public function cointPodCastFromLists($ListId){
+        return $this->db->selectAllFromDB(sprintf("SELECT ID FROM LISTPODCAST WHERE lIST_ID= %s AND PODCAST_ID=%s",$ListId,$podcastId));
+
+    }//getUserLists
+
+    public function countPodCastFromLists($ListId){
 
         return $this->db->selectAllFromDB(sprintf("SELECT count(ID) FROM LISTPODCAST WHERE lIST_ID= %s",$ListId));
 

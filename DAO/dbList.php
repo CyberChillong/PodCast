@@ -17,7 +17,7 @@ class dbList {
     }//__construct
 
     public function createList($pUserId, $pName){
-        $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO LISTS (NAME, USERS_ID) VALUES ('%s', '%s' );",$pName,$pUserId));
+        $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO LISTS (NAME, USERS_ID,ACTIVE) VALUES ('%s', '%s',1 );",$pName,$pUserId));
     }//createList
 
     public function getUserLists($UserId){
@@ -28,14 +28,14 @@ class dbList {
         }//foreach
         return $UserListObjects;
     }//getUserLists
-
     public function getUserListByUserIDAndName($UserId,$Name){
         $UserListObjects = [];
-        $Rows = $this->db->selectAllFromDB(sprintf("SELECT ID FROM LISTS WHERE USERS_ID= %s AND NAME=%s",$UserId,$Name));
-        foreach ($Rows as $row){
+       $Rows = $this->db->selectAllFromDB(sprintf("SELECT ID FROM LISTS WHERE USERS_ID= %s AND NAME='%s'",$UserId,$Name));
+       if(count($Rows)>0) {
+       foreach ($Rows as $row){
             array_push($UserListObjects, new ListsModel($row["ID"],$Name));
         }//foreach
-
+       }
         return $UserListObjects;
 
     }//getUserLists
@@ -45,7 +45,6 @@ class dbList {
 
     }//NameUpdate
 
-}//List
 
-$o = new dbList();
-$o->nameUpdate("1", "Dario");
+
+}//List

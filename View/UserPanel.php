@@ -3,7 +3,16 @@
 <link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
 require_once "../Models/UserModel.php";
-session_start();?>
+session_start();
+if (isset($_SESSION['listCreated']) !== false) {
+    if ($_SESSION['listCreated'] === true) {
+        echo '<script>alert("New list created")</script>';
+    } else {
+        echo '<script>alert("A list with the name given already exists on your account")</script>';
+    }
+    $_SESSION['listCreated'] = NULL;
+}
+?>
 <style>
     html, body {
         width: 100%;
@@ -31,6 +40,7 @@ session_start();?>
         } else {
             echo '<div class="navbar-nav ml-auto">
             <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
+            <a  id="createList" class="nav-item nav-link" onclick="redirect()">New List</a>
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
@@ -108,7 +118,6 @@ session_start();?>
     </div>
 </body>
 </html>
-
-<!--icons website: https://www.flaticon.com/free-icons/profile-->
+<script src="javascript.js"></script>
 
 

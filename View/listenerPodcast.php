@@ -1,19 +1,29 @@
 <?php
 require "../Models/UserModel.php";
-require "../Library/conteudoXML.php";
 session_start();
-$pathInfo = $_POST["p"];
-$pathInfo=substr($pathInfo,1);
-$pathInfo=explode(":/",$pathInfo);
-$caminhoParaOAudio="https://".$pathInfo[1];
-if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
-    header("Location:../Controller/Podcast.php/hist/".$caminhoParaOAudio);
-}else{
-    if($_SESSION["pathOfPodcastAddedToHistList"]===null){
-        header("Location:../Controller/Podcast.php/hist/".$caminhoParaOAudio);
-    }else{
-        $_SESSION["pathOfPodcastAddedToHistList"]=null;
+if (isset($_SESSION['UserModel']) !== false) {
+    if (isset($_SESSION["pathOfPodcastAddedToHistList"]) !== false) {
+        if ($_SESSION["pathOfPodcastAddedToHistList"] === "0" || $_SESSION["pathOfPodcastAddedToHistList"] === NULL) {
+            $pathToAudio = $_POST["p"];
+            header("Location:../Controller/Podcast.php/hist/" . $pathToAudio);
+        } else {
+            $pathToAudio = $_SESSION["pathOfPodcastAddedToHistList"];
+            $_SESSION["pathOfPodcastAddedToHistList"] = "0";
+        }
+    } else {
+        $pathToAudio = $_POST["p"];
+        header("Location:../Controller/Podcast.php/hist/" . $pathToAudio);
     }
+} else {
+    $pathToAudio = $_POST["p"];
+}
+if (isset($_SESSION['listCreated']) !== false) {
+    if ($_SESSION['listCreated'] === true) {
+        echo '<script>alert("New list created")</script>';
+    } else {
+        echo '<script>alert("A list with the name given already exists on your account")</script>';
+    }
+    $_SESSION['listCreated'] = NULL;
 }
 ?>
 <!DOCTYPE html>
@@ -39,6 +49,7 @@ if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
         } else {
             echo '<div class="navbar-nav ml-auto">
             <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
+            <a  id="createList" class="nav-item nav-link" onclick="redirect()">New List</a>
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
@@ -47,7 +58,7 @@ if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
         ?>
 </nav>
 <div class="container">
-    <?php echo '<audio controls><source src="'.$caminhoParaOAudio.'" type="audio/ogg"></audio>'; ?>
+    <?php echo '<audio controls><source src="' . $pathToAudio . '" type="audio/mpeg"></audio>'; ?>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -62,3 +73,4 @@ if(isset($_SESSION["pathOfPodcastAddedToHistList"])===false){
 </div>
 </body>
 </html>
+<script src="javascript.js"></script>
