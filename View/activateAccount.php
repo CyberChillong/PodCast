@@ -1,12 +1,22 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
-session_start();
 if (isset($_SESSION['UserModel'])) {
     header("Location:../View/index.php");
-} ?>
-<body><nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+}
+if(isset($_SESSION['activeAccount'])){
+    if($_SESSION['activeAccount']===false){
+        echo "<script>alert('Ativation of user account fail because of the credentials or the user account is already active')</script>";
+        $_SESSION['activeAccount']=null;
+    }
+}
+?>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -33,11 +43,7 @@ if (isset($_SESSION['UserModel'])) {
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/USER.php/reg">
-        <div class="form-group row justify-content-center">
-            <label for="username">Username:</label>
-            <input type="text" name="username" class="form-control text-center" required>
-        </div>
+    <form method="post" action="../Controller/USER.php/act">
         <div class="form-group row justify-content-center">
             <label for="email">Email:</label>
             <input type="email" name="email" class="form-control text-center" required>
@@ -47,12 +53,15 @@ if (isset($_SESSION['UserModel'])) {
             <input type="password" name="password" class="form-control text-center" required>
         </div>
         <div class="form-group row justify-content-center">
-            <input type="submit" value="Submit" class="btn btn-primary" required>
+            <input type="submit" value="Submit" class="btn btn-primary">
         </div>
     </form>
     <?php
+    if (isset($_SESSION["LoginStatus"])) {
+        echo "<div class=alert alert-danger>" . $_SESSION["LoginStatus"] . "</div>";
+    }//if
     if (isset($_SESSION["RegistrationStatus"])) {
-        echo "<div class=\"alert alert-danger\">" . $_SESSION["RegistrationStatus"] . "</div>";
+        echo "<div class=alert alert-success>" . $_SESSION["RegistrationStatus"] . "</div>";
     }//if
     ?>
 </div>

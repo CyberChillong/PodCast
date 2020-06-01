@@ -14,6 +14,8 @@ class User
     private function registar()
     {
         session_start();
+        $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
+        $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         $email = strtolower($_POST['email']);
         $password = $_POST['password'];
         $username = strtolower($_POST['username']);
@@ -22,30 +24,39 @@ class User
         $resultado = $this->dbUser->makeUserRegistration($username, $password, $email);
         if ($resultado === true) {
             $_SESSION['RegistrationStatus'] = "Your registrations was made whit success, now you can made the login";
-            header("Location:../../View/login.php");
+
+            $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/login.php";
+            header("Location:" . $pathToListenerPodcast);
         } else {
             $_SESSION['RegistrationStatus'] = "You have failed the registration process please repeat and verify your data";
-            header("Location:../../View/registar.php");
+            $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/registar.php";
+            header("Location:" . $pathToListenerPodcast);
         }
         }else {
             $_SESSION['RegistrationStatus'] = "You have failed the registration process because your data is already being used";
-            header("Location:../../View/registar.php");
+            $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/registar.php";
+            header("Location:" . $pathToListenerPodcast);
         }
     }//registar
 
     public function login()
     {
         session_start();
+        $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
+        $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         $email = strtolower($_POST['email']);
         $password = strtolower($_POST['password']);
         $passwordHash = hash("md5", $password);
         $aResults = $this->dbUser->authentication($email, $passwordHash);
         if (count($aResults) > 0) {
             $_SESSION['UserModel'] = new UserModel($aResults[0], $aResults[1], $email, $password);
-            header("Location:../../View/index.php");
+            $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/index.php";
+            header("Location:" . $pathToListenerPodcast);
         } else {
             $_SESSION['LoginStatus'] = "Your Logging has fail verify your credentials our create an account our account is desable";
-            header("Location:../../View/login.php");
+
+            $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/login.php";
+            header("Location:" . $pathToListenerPodcast);
 
         }
 
@@ -54,6 +65,8 @@ class User
     private function editar()
     {
         session_start();
+        $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
+        $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         $email = strtolower($_POST['email']);
         $password = $_POST['password'];
         $username = strtolower($_POST['username']);
@@ -91,16 +104,38 @@ class User
         if($_SESSION['EditAccountStatus']===null){
             $_SESSION['EditAccountStatus'] = "Your edit of account was made whit success";
         }
-        header("Location:../../View/editAcount.php");
+        $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/editAcount.php";
+        header("Location:" . $pathToListenerPodcast);
     }//editarConta
-
 
     private function desativarUser(){
         session_start();
+        $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
+        $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         $id = $_SESSION["UserModel"]->id;
         $this->dbUser->deactiveUser($id);
         session_destroy();
-        header("Location:../../View/index.php");
+        $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/index.php";
+        header("Location:" . $pathToListenerPodcast);
+    }
+
+    private function ativarUser(){
+        session_start();
+        $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
+        $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
+        $email=$_POST['email'];
+        $password=$_POST['password'];
+        $passwordHash = hash("md5", $password);
+        $userDeactivated = $this->dbUser->getDeactiveUser($email, $passwordHash);
+       if (count($userDeactivated) > 0) {
+            $this->dbUser->activeUser($userDeactivated[0]);
+           $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/listOfPodcasts.php";
+           header("Location:" . $pathToListenerPodcast);
+        }else{
+            $_SESSION['activeAccount']=false;
+           $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/activateAccount.php";
+           header("Location:" . $pathToListenerPodcast);
+        }
     }
     public function escolha()
     {
@@ -114,6 +149,8 @@ class User
             $this->editar();
         } else if ($pathInfo[1] === "deac") {
             $this->desativarUser();
+        }else if ($pathInfo[1] === "act") {
+            $this->ativarUser();
         }
     }
 }

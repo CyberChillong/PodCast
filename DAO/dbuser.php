@@ -25,6 +25,19 @@ class dbuser
         return $aUserInfo;
     }//authentications
 
+    function getDeactiveUser($pStrEmail, $pStrPassword)
+    {
+        $aUserInfo = [];
+        $strQuery = sprintf("SELECT ID, USERNAME FROM USERS WHERE EMAILS= '%s' AND PASSWORD = '%s' AND ACTIVE=0 ", $pStrEmail,$pStrPassword);
+        $oQueryResults = $this->db->selectDB($strQuery);
+        if ($oQueryResults != null) { //if the query result is different than null
+            foreach ($oQueryResults as $Result) {
+                array_push($aUserInfo, $Result); //get the user info ID, USERNAME, EMAIL
+            }//foreach
+        }//if
+        return $aUserInfo;
+    }//authentications
+
     function updateUserEmail($pUserId ,$pNewEmail){
         $strQuery = sprintf("UPDATE USERS SET EMAILS= '%s' WHERE ID = '%f'", $pNewEmail, $pUserId);
         $this->db->insertUpdateDeleteDB($strQuery);
@@ -32,6 +45,10 @@ class dbuser
 
     function deactiveUser($pUserId ){
         $strQuery = sprintf("UPDATE USERS SET ACTIVE= 0 WHERE ID = '%f'" , $pUserId);
+        $this->db->insertUpdateDeleteDB($strQuery);
+    }//updateUserEmail
+    function activeUser($pUserId ){
+        $strQuery = sprintf("UPDATE USERS SET ACTIVE= 1 WHERE ID = '%f'" , $pUserId);
         $this->db->insertUpdateDeleteDB($strQuery);
     }//updateUserEmail
 
