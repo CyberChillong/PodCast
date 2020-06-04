@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
 require_once "../Models/UserModel.php";
 session_start();
@@ -64,8 +63,6 @@ if (isset($_SESSION['listCreated']) !== false) {
     <div class="container">
     <div class="tab">
         <button class="tablinks btn-dark" onclick="openTab(event, 'UserInfo')">User Info</button>
-        <button class="tablinks btn-dark" onclick="openTab(event, 'PlayList')">PlayList</button>
-        <button class="tablinks btn-dark" onclick="openTab(event, 'Favourites')">Favourites</button>
     </div>
 
     <div id="UserInfo" style="visibility: hidden;" class="tabcontent">
@@ -87,16 +84,6 @@ if (isset($_SESSION['listCreated']) !== false) {
 
         ?>
         </ul>
-    </div>
-
-    <div id="PlayList" style="visibility: hidden;" class="tabcontent">
-        <h3>Your Play Lists</h3>
-        <p>Paris is the capital of France.</p>
-    </div>
-
-    <div id="Favourites" style="visibility: hidden;"  class="tabcontent">
-        <h3>Your Favourites: </h3>
-        <p>Tokyo is the capital of Japan.</p>
     </div>
 
     <script>

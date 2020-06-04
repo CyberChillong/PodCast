@@ -1,29 +1,13 @@
 <?php
 require "../Models/UserModel.php";
 session_start();
-if (isset($_SESSION['UserModel']) !== false) {
-    if (isset($_SESSION["pathOfPodcastAddedToHistList"]) !== false) {
-        if ($_SESSION["pathOfPodcastAddedToHistList"] === "0" || $_SESSION["pathOfPodcastAddedToHistList"] === NULL) {
-            $pathToAudio = $_POST["p"];
-            header("Location:../Controller/Podcast.php/hist/" . $pathToAudio);
-        } else {
-            $pathToAudio = $_SESSION["pathOfPodcastAddedToHistList"];
-            $_SESSION["pathOfPodcastAddedToHistList"] = "0";
-        }
-    } else {
-        $pathToAudio = $_POST["p"];
-        header("Location:../Controller/Podcast.php/hist/" . $pathToAudio);
-    }
-} else {
-    $pathToAudio = $_POST["p"];
-}
 if (isset($_SESSION['listCreated']) !== false) {
     if ($_SESSION['listCreated'] === true) {
         echo '<script>alert("New list created")</script>';
     } else {
         echo '<script>alert("A list with the name given already exists on your account")</script>';
     }
-    $_SESSION['listCreated'] = NULL;
+$_SESSION['listCreated'] = NULL;
 }
 ?>
 <!DOCTYPE html>
@@ -58,9 +42,31 @@ if (isset($_SESSION['listCreated']) !== false) {
         ?>
 </nav>
 <div class="container">
-    <div class="row justify-content-center">
-    <?php echo '<audio controls><source src="' . $pathToAudio . '" type="audio/mpeg"></audio>'; ?>
+        <div class="row  justify-content-center">
+            <h1>Agregador de Podcast</h1>
+        </div>
+
+    <div class="row justify-Content-center">
+        <p>
+            Com este trabalho pretendemos criar uma solução que agrega podcasts permitindo ao utilizador criar listas de reprodução , consumindo
+            o conteudo pela ordem que prefere sem ser interrompido por anuncios. Poderá utilizar esta ferramenta de forma gratuita.
+        </p>
     </div>
+
+        <img src="./Assets/about.jpeg"  class="rounded-circle" alt="Cinque Terre" width="304" height="236">
+        <div class="row justify-Content-center">
+        <h2>Trabalho realizado por:</h2>
+        </div>
+
+    <div class="row justify-Content-center">
+                <ul>
+                    <li><h4>Rafael Meia Bota nº 160173004</h4></li>
+                    <li><h4>Miguel Caetano nº 170100329</h4></li>
+                    <li><h4>Daniel Carvalho nº 170100334</h4></li>
+                </ul>
+        </div>
+
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
             crossorigin="anonymous"></script>

@@ -21,6 +21,7 @@ class Podcast
 
     public function __construct()
     {
+        date_default_timezone_set("Europe/Lisbon");
         $this->anchorfm = new Library\anchorfm();
         $this->dbList = new dbList();
         $this->dbListPodcast = new dbListPodcast();
@@ -30,7 +31,9 @@ class Podcast
     //função para usar obter os podcasts com a api encontrada para o efeito
     private function searchPodcast($pSearch)
     {
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         $_SESSION["searchName"] = $pSearch;
         $pSearch = explode(" ", $pSearch);
         $searchQuery = null;
@@ -41,7 +44,7 @@ class Podcast
                 $searchQuery .= $pSearch[$i] . "+";
             }
         }
-        $resultado = $this->anchorfm->getXmlResponse($searchQuery);
+         $resultado = $this->anchorfm->getXmlResponse($searchQuery);
         $_SESSION['Podcast'] = $resultado;
         if (isset($_SESSION['UserModel']) !== false) {
             $this->setVariableForAdditionToList($resultado);
@@ -51,7 +54,8 @@ class Podcast
         $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/index.php";
         header("Location:" . $pathToListenerPodcast);
     }
-
+    //Função usada para criar ou alterar o valor da variavel de sessão que vai ficar com um array das listas que o podcast
+    // não está ainda
     private function setVariableForAdditionToList($arrayWithPodcastSource)
     {
         $aux = 0;
@@ -81,7 +85,9 @@ class Podcast
     //function para obter as listas de podcasts do utilizador
     private function getListsOfUser()
     {
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
         $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         if (isset($_SESSION['UserModel']) !== false) {
@@ -107,14 +113,17 @@ class Podcast
     //function para obter os podcasts da lista selecionada pelo utilizador
     private function getMyPodcastsOfList()
     {
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
         $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         if (isset($_SESSION['UserModel']) !== false) {
-            if(isset($_POST["l"])){
-                $_SESSION['idOfList']=(integer)$_POST["l"];
+            if (isset($_POST["l"])) {
+                $_SESSION['idOfList'] = (integer)$_POST["l"];
             }
             $idOfList = $_SESSION['idOfList'];
+            $_SESSION['NameOfCurrentList'] = $this->dbList->getListNameById($idOfList);
             $resultWithTheIdsOfPodcastsOnTheList = $this->dbListPodcast->getPodCastFromLists($idOfList);
             $arrayComOsPodcasts = [];
             foreach ($resultWithTheIdsOfPodcastsOnTheList as $podcastOfList) {
@@ -133,13 +142,15 @@ class Podcast
     }
 
     //função para inserir no historico do utilizador o podcast que vai ouvir
-    private function insertOnList($pathToAudioWhitHTTP, $pNameOfList)
+    private function insertOnList($pathToAudio, $pNameOfList)
     {
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         $pathOfThePageWhereTheRequestWasMade = $_SERVER["HTTP_REFERER"];
         $pathOfThePageWhereTheRequestWasMade = explode("/View", $pathOfThePageWhereTheRequestWasMade);
         if (isset($_SESSION['UserModel']) !== false) {
-            $verificationIfPodcastExistsOnDataBase = $this->dbPodcast->getPodCastFromSource($pathToAudioWhitHTTP);
+            $verificationIfPodcastExistsOnDataBase = $this->dbPodcast->getPodCastFromSource($pathToAudio);
             $nameOfTheSessionVariable = null;
             if (count($verificationIfPodcastExistsOnDataBase) === 0) {
                 if ($_SESSION['whereItComes'] === "l") {
@@ -148,16 +159,16 @@ class Podcast
                     $nameOfTheSessionVariable = 'Podcast';
                 }
                 $counterOfTheAtualPodcast = 0;
-                while ($_SESSION[$nameOfTheSessionVariable][$counterOfTheAtualPodcast]->source !== $pathToAudioWhitHTTP && $counterOfTheAtualPodcast < (count($_SESSION[$nameOfTheSessionVariable]) - 1)) {
+                while ($_SESSION[$nameOfTheSessionVariable][$counterOfTheAtualPodcast]->source !== $pathToAudio && $counterOfTheAtualPodcast < (count($_SESSION[$nameOfTheSessionVariable]) - 1)) {
                     $counterOfTheAtualPodcast++;
                 }
                 $title = $_SESSION[$nameOfTheSessionVariable][$counterOfTheAtualPodcast]->title;
                 $description = $_SESSION[$nameOfTheSessionVariable][$counterOfTheAtualPodcast]->description;
                 $publicationDate = $_SESSION[$nameOfTheSessionVariable][$counterOfTheAtualPodcast]->date;
-                $this->dbPodcast->insertPodcast($title, $description, $publicationDate, $pathToAudioWhitHTTP);
-            }
+                $this->dbPodcast->insertPodcast($title, $description, $publicationDate, $pathToAudio);
 
-            $verificationIfPodcastExists = $this->dbPodcast->getPodCastFromSource($pathToAudioWhitHTTP);
+            }
+            $verificationIfPodcastExists = $this->dbPodcast->getPodCastFromSource($pathToAudio);
             $podcastID = $verificationIfPodcastExists[0]["ID"];
             $idUser = $_SESSION['UserModel']->id;
             $verificationIfListOfUserIfCreated = $this->dbList->getUserListByUserIDAndName($idUser, $pNameOfList);
@@ -169,7 +180,7 @@ class Podcast
             $todayDate = date("Y-m-d H:i:s");
             $this->dbListPodcast->InsertPodcastOnList($idOfHystoricListId, $podcastID, $todayDate);
             if ($pNameOfList === "Historic") {
-                $_SESSION["pathOfPodcastAddedToHistList"] = $pathToAudioWhitHTTP;
+                $_SESSION["pathOfPodcastAddedToHistList"] = $pathToAudio;
                 $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/listenerPodcast.php";
                 header("Location:" . $pathToListenerPodcast);
             } else {
@@ -180,16 +191,16 @@ class Podcast
                 } else if ($nameOfView === "/listOfPodcasts.php") {
                     $this->getMyPodcastsOfList();
                 } else {
-                    header("Location:" . $pathOfThePageWhereTheRequestWasMade);
+                         header("Location:" . $pathOfThePageWhereTheRequestWasMade);
                 }
             }
         } else {
             $pathToListenerPodcast = $pathOfThePageWhereTheRequestWasMade[0] . "/View/index.php";
-            header("Location:" . $pathToListenerPodcast);
+              header("Location:" . $pathToListenerPodcast);
         }
 
     }
-
+    //função para criar uma nova lista
     private function createNewList($listName)
     {
         session_start();
@@ -218,17 +229,54 @@ class Podcast
             header("Location:" . $pathOfThePageWhereTheRequestWasMade);
         }
     }
-
-    private function changeListName($strListName, $strListId)
+    //função para mudar o nome da lista
+    private function changeListName($strListId, $strListName)
     {
         session_start();
         if (isset($_SESSION['UserModel']) !== false) {
             $idUser = $_SESSION['UserModel']->id;
-            if ($idUser !== null && $strListId !== "" && $strListName !== "") {
+            $verificationIfListOfUserIfCreated = $this->dbList->getUserListByUserIDAndName($idUser, $strListName);
+            if (count($verificationIfListOfUserIfCreated) === 0) {
                 $this->dbList->nameUpdate($strListId, $strListName);
-            }//if
-        }//if
+                $_SESSION['listDeleted'] = true;
+            } else {
+                $_SESSION['listDeleted'] = false;
+            }
+        } else {
+            $_SESSION['listDeleted'] = false;
+        }
+        $this->getListsOfUser();
+
     }//changeListName
+    //função para desativar a lista
+    private function deactivateList($strListId)
+    {
+
+        $this->dbList->deactivateList($strListId);
+        $this->getListsOfUser();
+    }//changeListName
+
+    //função para ativar a lista
+    private function activateList($strListName)
+    {
+
+        session_start();
+        if (isset($_SESSION['UserModel']) !== false) {
+            $UserId = $_SESSION['UserModel']->id;
+            $this->dbList->activateList($strListName, $UserId);
+            $this->getListsOfUser();
+        }//if
+
+    }//changeListName
+
+    //função para desativar um podcast da lista
+    public function deletePodCast($pStrListId, $pStrPodcastSource)
+    {
+        $oPodcastId = $this->dbPodcast->getPodCastFromSource($pStrPodcastSource);
+        $this->dbListPodcast->deletePodCast((int)$pStrListId, (int)$oPodcastId[0]['ID']);
+        $this->getMyPodcastsOfList();
+    }//deletePodCast
+
 
     public function choice()
     {
@@ -241,26 +289,40 @@ class Podcast
         } else if ($pathInfo[1] === "getListPodcast") {
             $this->getMyPodcastsOfList();
         } else if ($pathInfo[1] === "hist") {
-            $pathToAudioWhitoutHTTP = null;
+            $pathToAudio = null;
             for ($i = 2; $i < count($pathInfo); $i++) {
                 if ($i + 1 >= count($pathInfo)) {
-                    $pathToAudioWhitoutHTTP .= $pathInfo[$i];
+                    $pathToAudio .= $pathInfo[$i];
                 } else if ($i === 2) {
-                    $pathToAudioWhitoutHTTP .= $pathInfo[$i] . "//";
+                    $pathToAudio .= $pathInfo[$i] . "//";
                 } else {
-                    $pathToAudioWhitoutHTTP .= $pathInfo[$i] . "/";
+                    $pathToAudio .= $pathInfo[$i] . "/";
                 }
             }
-            $this->insertOnList($pathToAudioWhitoutHTTP, 'Historic');
+            $this->insertOnList($pathToAudio, 'Historic');
         } else if ($pathInfo[1] === "newList") {
             $this->createNewList($pathInfo[2]);
         } else if ($pathInfo[1] === "insertList") {
             $this->insertOnList($_POST['p'], $_POST['selectList']);
         } else if ($pathInfo[1] === "changeName") {
             $this->changeListName($pathInfo[2], $pathInfo[3]);
+        } else if ($pathInfo[1] === "DeactivateList") {
+            $this->deactivateList($pathInfo[2]);
+        } else if ($pathInfo[1] === "ActivateList") {
+            $this->activateList($pathInfo[2]);
+        } else if ($pathInfo[1] === "deletePodcast") {
+            $pathToAudio = null;
+            for ($i = 4; $i < count($pathInfo); $i++) {
+                if ($i + 1 >= count($pathInfo)) {
+                    $pathToAudio .= $pathInfo[$i];
+                } else {
+                    $pathToAudio .= $pathInfo[$i] . "/";
+                }
+            }
+            $this->deletePodCast($pathInfo[2], "http://" . $pathToAudio);
         }
     }
 }
 
-$u = new Podcast();
-$u->choice();
+$o = new Podcast();
+$o->choice();

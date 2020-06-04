@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
 session_start();
 if (isset($_SESSION['UserModel'])) {
@@ -20,7 +19,6 @@ if (isset($_SESSION['UserModel'])) {
             echo '<div class="navbar-nav ml-auto">
             <a href="./registar.php" class="nav-item nav-link">Sign in</a>
             <a href="./login.php" class="nav-item nav-link">Login</a>
-            <a href="./activateAccount.php" class="nav-item nav-link">Active Account</a>
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">

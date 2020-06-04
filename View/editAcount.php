@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
 require "../Models/UserModel.php";
 session_start();

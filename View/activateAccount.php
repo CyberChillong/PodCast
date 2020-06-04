@@ -3,7 +3,6 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
 if (isset($_SESSION['UserModel'])) {
     header("Location:../View/index.php");
@@ -56,14 +55,6 @@ if(isset($_SESSION['activeAccount'])){
             <input type="submit" value="Submit" class="btn btn-primary">
         </div>
     </form>
-    <?php
-    if (isset($_SESSION["LoginStatus"])) {
-        echo "<div class=alert alert-danger>" . $_SESSION["LoginStatus"] . "</div>";
-    }//if
-    if (isset($_SESSION["RegistrationStatus"])) {
-        echo "<div class=alert alert-success>" . $_SESSION["RegistrationStatus"] . "</div>";
-    }//if
-    ?>
 </div>
 </body>
 </html>

@@ -18,8 +18,8 @@ if (isset($_SESSION['podcastAddedToList'])) {
     }
     $_SESSION['podcastAddedToList'] = NULL;
 }
-if(isset($_SESSION['Podcast'])){
-    $_SESSION['Podcast']=null;
+if (isset($_SESSION['Podcast'])) {
+    $_SESSION['Podcast'] = null;
 }
 ?>
 <!DOCTYPE html>
@@ -89,14 +89,27 @@ if(isset($_SESSION['Podcast'])){
             }
             for ($i = (($numeroDaPaginaAtual - 1) * 20); $i <= $numeroQueOForTemDeChegar; $i++) {
                 $podcast = $_SESSION['UserPodcastOfList'][$i];
-                $tabela .= '<tr>' . '<td scope="row">' . $podcast->title . '</td >' . '<td >' . $podcast->date . '</td >' . '<td >' . $podcast->description . '</td >' . '<td ><form method="post" action="listenerPodcast.php">
-        <div class="row justify-content-center">
-          <div class="col-6">
-                <input name="p" style="visibility: hidden" value="' . $podcast->source . '"></input>
+                $tabela .= sprintf('<tr><td scope="row">%s</td ><td >%s</td ><td >%s</td ><td >
+                <form method="post" action="listenerPodcast.php">
+                <div class="row justify-content-center">
+                <div class="col-6">
+                <input name="p" style="visibility: hidden" value="%s">
                 <input type="submit" class="btn btn-dark"  value="Listen" >
             </div>
         </div>
-    </form></td >';
+        </form>', $podcast->title, $podcast->date, $podcast->description, $podcast->source);
+
+                if ($_SESSION['NameOfCurrentList']['NAME'] !== "Historic") {
+                    $tabela .= '<form method="post" action="../Controller/Podcast.php/deletePodcast/' . $_SESSION["idOfList"] . '/' . $podcast->source . '">
+        <div class="row justify-content-center">
+          <div class="col-6">
+                <input type="submit" class="btn btn-dark"  value="Delete" >
+            </div>
+        </div>
+         </form>
+     
+    </td >';
+                }
                 if (isset($_SESSION["UserModel"]) !== false && isset($_SESSION["ListToAddPodcast"]) !== false) {
                     if (count($_SESSION["ListToAddPodcast"][$i]) > 0) {
                         $tabela .= '<td>

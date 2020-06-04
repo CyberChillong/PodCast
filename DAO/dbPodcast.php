@@ -23,11 +23,11 @@ class dbPodcast {
 
     public function getPodCastFromId($podcastId){
 
-        return $this->db->selectAllFromDB(sprintf("SELECT TITLE,DESCRIPTION,DATES,SOURCES FROM PODCASTS WHERE ID= %s",$podcastId));
+        return $this->db->selectAllFromDB(sprintf("SELECT TITLE,DESCRIPTION,DATES,SOURCES FROM PODCASTS WHERE ID= %s and ACTIVE = 1",$podcastId));
 
     }//getPodcastFromId
     public function getPodCastFromSource($podcastSource){
-        return $this->db->selectAllFromDB("SELECT ID FROM PODCASTS WHERE SOURCES= '".$podcastSource."'");
+        return $this->db->selectAllFromDB(sprintf("SELECT ID FROM PODCASTS WHERE SOURCES='%s'",$podcastSource));
 
     }//getPodcastFromId
 

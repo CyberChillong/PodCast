@@ -6,6 +6,7 @@ Class UserModel{
     public $emails;
     public $password;
 
+
     public function __construct($pId, $pUsername, $email,$password)
     {
     $this->id=$pId;

@@ -1,9 +1,11 @@
 <?php
+
 require "../Models/UserModel.php";
 require "../Models/ListsModel.php";
+
 session_start();
 if (isset($_SESSION['UserModel']) === false) {
-    header("Location:../../View/index.php");
+    header("Location:../View/index.php");
 }
 if (isset($_SESSION['listCreated']) !== false) {
     if ($_SESSION['listCreated'] === true) {
@@ -12,6 +14,17 @@ if (isset($_SESSION['listCreated']) !== false) {
         echo '<script>alert("A list with the name given already exists on your account")</script>';
     }
     $_SESSION['listCreated'] = NULL;
+}
+if (isset($_SESSION['listDeleted']) !== false) {
+    if ($_SESSION['listDeleted'] === true) {
+        echo '<script>alert("The name of the list was alter with sucess")</script>';
+    } else {
+        echo '<script>alert("A list with the name given already exists on your account")</script>';
+    }
+    $_SESSION['listDeleted'] = NULL;
+}
+if (isset($_SESSION['UserListOfPodcasts']) !== true) {
+    header("Location:../Controller/Podcast.php/getList");
 }
 ?>
 <!DOCTYPE html>
@@ -39,6 +52,7 @@ if (isset($_SESSION['listCreated']) !== false) {
             echo '<div class="navbar-nav ml-auto">
             <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
             <a  id="createList" class="nav-item nav-link" onclick="redirect()">New List</a>
+            <a  id="ActivateList" class="nav-item nav-link" onclick="redirectActivateList()">Activate List</a>
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
@@ -67,7 +81,7 @@ if (isset($_SESSION['listCreated']) !== false) {
         <tr>
         <th scope="col">Titulo</th>
         <th scope="col">Number Of Podcasts On The List</th>
-        <th scope="col"></th>
+        <th scope="col">Option(s) of User:</th>
         <th scope="col"></th>
         </tr>
         </thead>
@@ -82,47 +96,55 @@ if (isset($_SESSION['listCreated']) !== false) {
             }
             for ($i = (($numeroDaPaginaAtual - 1) * 20); $i <= $numeroQueOForTemDeChegar; $i++) {
                 $podcast = $_SESSION['UserListOfPodcasts'][$i];
-                $tabela .= '<tr>' . '<td scope="row">' . $podcast->strName . '</td >' . '<td>' . $_SESSION['UsernumberOfPodcastsOnTheList'][$i] . '</td><td >
-        <form method="post" action="../Controller/Podcast.php/getListPodcast">
-        <div class="row justify-content-center">
-          <div class="col-6">
-                <input name="l" style="visibility: hidden" value="' . $podcast->strId . '"></input>
-                <input type="submit" class="btn btn-dark"  value="Open" >
-            </div>
-        </div>
-    </form></td >
-    <td ><form method="post" action="../Controller/Podcast.php/changeName">
-        <div class="row justify-content-center">
-          <div class="col-6">
-                <input name="2" value="'.$podcast->strId.'"></input>                
-                <input type="submit" class="btn btn-dark"  value="edit name" onsubmit="redirect(.$podcast->strId.)" >
-                <script type="text/javascript"> function redirect($strId) {
 
-        let optionToCreateList = window.document.getElementById("createList");
-
-            optionToCreateList.addEventListener("click", function () {
-            var nameOfList=prompt("What is the name of list?");
-            window.location.replace(  "../Controller/Podcast.php/newList/"+nameOfList + $strId);
-        });
-    }
-</script>
-            </div>
-        </div>
-    </form></td ></tr>';
-            }
-            $tabela .= '</tbody></table>';
-            echo $tabela;
-            echo '<nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">';
-            for ($i = 0; $i < $numeroDePaginas; $i++) {
-                if ($i + 1 === $numeroDaPaginaAtual) {
-                    echo '<li class="page-item active"><a class="page-link" name="n" href="ListsOfPodcasts.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
-                } else {
-                    echo '<li class="page-item"><a class="page-link" name="n" href="ListsOfPodcasts.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+                $tabela .= sprintf('<tr>
+                    <td>%s</td>
+                    <td>%s</td>
+                    <td>
+                    <form method="post" action="../Controller/Podcast.php/getListPodcast">
+                    <div class="row justify-content-center">
+                      <div class="col-6">
+                            <input name="l" style="visibility: hidden" value="%s">
+                            <input type="submit" class="btn btn-dark"  value="Open" >
+                        </div>
+                    </div>
+                    </form>
+                    </td>', $podcast->strName, $_SESSION['UsernumberOfPodcastsOnTheList'][$i], $podcast->strId);
+                if ($podcast->strName !== "Historic") {
+                    $tabela .= sprintf(' <td>
+                     <form method="post" action="../Controller/Podcast.php/DeactivateList/%s">
+                    <div class="row justify-content-center">
+                      <div class="col-6">
+                            <input type="submit" class="btn btn-dark"  value="Deactivate List" >
+                        </div>
+                    </div>
+                     </form></td>', $podcast->strId);
+                    $tabela .= sprintf('<td>
+                    <form id="ChangeListName" method="post">
+                    <div class="row justify-content-center">
+                      <div class="col-6">
+                            <input type="button" id="editList" class="btn btn-dark"  value="Change List Name" onclick="redirectChangeNameOfList(%s)" >
+                            </div>
+                        </div>
+                        </form>
+                    </td>',$podcast->strId);
                 }
+                $tabela .= '</tr>';
             }
-            echo '</ul></nav>';
         }
+        $tabela .= '</tbody></table>';
+        echo $tabela;
+        echo '<nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">';
+        for ($i = 0; $i < $numeroDePaginas; $i++) {
+            if ($i + 1 === $numeroDaPaginaAtual) {
+                echo '<li class="page-item active"><a class="page-link" name="n" href="ListsOfPodcasts.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+            } else {
+                echo '<li class="page-item"><a class="page-link" name="n" href="ListsOfPodcasts.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+            }
+        }
+        echo '</ul></nav>';
+
     }
     ?>
 
@@ -142,6 +164,6 @@ if (isset($_SESSION['listCreated']) !== false) {
 </html>
 <script src="javascript.js"></script>
 <?php
-if (isset($_SESSION['UserListOfPodcasts'])){
-    $_SESSION['UserListOfPodcasts']=null;
+if (isset($_SESSION['UserListOfPodcasts'])) {
+    $_SESSION['UserListOfPodcasts'] = null;
 } ?>

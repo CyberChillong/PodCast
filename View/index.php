@@ -19,8 +19,8 @@ if (isset($_SESSION['podcastAddedToList'])) {
     }
     $_SESSION['podcastAddedToList'] = NULL;
 }
-if(isset($_SESSION['UserPodcastOfList'])){
-    $_SESSION['UserPodcastOfList']=null;
+if (isset($_SESSION['UserPodcastOfList'])) {
+    $_SESSION['UserPodcastOfList'] = null;
 }
 ?>
 <!DOCTYPE html>
@@ -42,7 +42,6 @@ if(isset($_SESSION['UserPodcastOfList'])){
             echo '<div class="navbar-nav ml-auto">
             <a href="./registar.php" class="nav-item nav-link">Sign in</a>
             <a href="./login.php" class="nav-item nav-link">Login</a>
-            <a href="./activateAccount.php" class="nav-item nav-link">Active Account</a>
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">
@@ -103,31 +102,33 @@ if(isset($_SESSION['UserPodcastOfList'])){
             }
             for ($i = (($numeroDaPaginaAtual - 1) * 20); $i <= $numeroQueOForTemDeChegar; $i++) {
                 $podcast = $_SESSION['Podcast'][$i];
-                $tabela .= '<tr>' . '<td scope="row">' . $podcast->title . '</td >' . '<td >' . $podcast->date . '</td >' . '<td >' . $podcast->description . '</td ><td >
-        <form method="post" action="listenerPodcast.php">
-        <div class="row justify-content-center">
-          <div class="col-6">
-                <input name="p" style="visibility: hidden" value="' . $podcast->source . '"></input>
+                $tabela .= sprintf('<tr><td scope="row">%s</td><td>%s</td><td>%s</td><td>
+                <form method="post" action="listenerPodcast.php">
+                <div class="row justify-content-center">
+                <div class="col-6">
+                <input name="p" style="visibility: hidden" value="%s"></input>
                 <input type="submit" class="btn btn-dark"  value="Listen" >
-            </div>
-        </div>
-    </form></td >';
+                </div>
+                </div>
+                </form></td >'
+                ,$podcast->title,$podcast->date,$podcast->description,$podcast->source);
                 if (isset($_SESSION["UserModel"]) !== false && isset($_SESSION["ListToAddPodcast"]) !== false) {
                     if (count($_SESSION["ListToAddPodcast"][$i]) > 0) {
-                        $tabela .= '<td>
-        <form method="post" action="../Controller/Podcast.php/insertList/">
-        <div class="row justify-content-center">
-          <div class="col-6">
-          <input name="p" style="visibility: hidden" value="' . $podcast->source . '"></input>
-                <select name="selectList">';
+
+                        $tabela .= sprintf('<td>
+                    <form method="post" action="../Controller/Podcast.php/insertList/">
+                    <div class="row justify-content-center">
+                    <div class="col-6">
+                    <input name="p" style="visibility: hidden" value="%s">
+                    <select name="selectList">', $podcast->source);;
                         foreach ($_SESSION["ListToAddPodcast"][$i] as $listName) {
                             $tabela .= '<option>' . $listName . '</option>';
                         }
                         $tabela .= '</select>
-                <input type="submit" class="btn btn-dark"  value="add ToList" >
-            </div>
-        </div>
-    </form></td ></tr>';
+                         <input type="submit" class="btn btn-dark"  value="add ToList" >
+                         </div>
+                         </div>
+                         </form></td ></tr>';
                     }
                 }
             }
