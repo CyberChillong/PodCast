@@ -5,7 +5,6 @@ namespace DAO;
 
 use Library\dbConnection;
 require_once "../Library/dbConnection.php";
-//require_once "../Models/ListsModel.php";
 class dbPodcast {
 
     private $db;
@@ -15,7 +14,7 @@ class dbPodcast {
     }//__construct
 
     public function insertPodcast ($pTitle, $pDESCRIPTION, $pDate, $pSources){
-        return $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO PODCASTS (TITLE, DESCRIPTION, DATES, SOURCES,ACTIVE) VALUES ('%s', '%s', '%s', '%s','%s');",
+         $this->db->insertUpdateDeleteDB(sprintf("INSERT INTO PODCASTS (TITLE, DESCRIPTION, DATES, SOURCES,ACTIVE) VALUES ('%s', '%s', '%s', '%s','%s');",
         $pTitle, $pDESCRIPTION, $pDate, $pSources,1));
 
 

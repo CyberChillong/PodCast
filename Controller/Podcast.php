@@ -203,7 +203,9 @@ class Podcast
     //função para criar uma nova lista
     private function createNewList($listName)
     {
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         if (isset($_SESSION['UserModel']) !== false) {
             $idUser = $_SESSION['UserModel']->id;
             $verificationIfListOfUserIfCreated = $this->dbList->getUserListByUserIDAndName($idUser, $listName);
@@ -232,7 +234,9 @@ class Podcast
     //função para mudar o nome da lista
     private function changeListName($strListId, $strListName)
     {
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         if (isset($_SESSION['UserModel']) !== false) {
             $idUser = $_SESSION['UserModel']->id;
             $verificationIfListOfUserIfCreated = $this->dbList->getUserListByUserIDAndName($idUser, $strListName);
@@ -251,7 +255,9 @@ class Podcast
     //função para desativar a lista
     private function deactivateList($strListId)
     {
-
+        if (session_status() !== 2) {
+            session_start();
+        }
         $this->dbList->deactivateList($strListId);
         $this->getListsOfUser();
     }//changeListName
@@ -260,7 +266,9 @@ class Podcast
     private function activateList($strListName)
     {
 
-        session_start();
+        if (session_status() !== 2) {
+            session_start();
+        }
         if (isset($_SESSION['UserModel']) !== false) {
             $UserId = $_SESSION['UserModel']->id;
             $this->dbList->activateList($strListName, $UserId);
@@ -323,6 +331,5 @@ class Podcast
         }
     }
 }
-
 $o = new Podcast();
 $o->choice();

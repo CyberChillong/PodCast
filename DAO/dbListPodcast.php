@@ -4,7 +4,6 @@
 namespace DAO;
 
 use Library\dbConnection;
-use Models\ListsModel;
 
 require_once "../Library/dbConnection.php";
 require_once "../Models/ListsModel.php";
@@ -33,7 +32,7 @@ class dbListPodcast{
 
     public function deletePodCast($pStrListId,$pStrPodcastId){
 
-        return $this->db->insertUpdateDeleteDB(sprintf("UPDATE LISTPODCAST SET ACTIVE=0 WHERE LIST_ID= %s AND PODCAST_ID = %s",$pStrListId,$pStrPodcastId));
+         $this->db->insertUpdateDeleteDB(sprintf("UPDATE LISTPODCAST SET ACTIVE=0 WHERE LIST_ID= %s AND PODCAST_ID = %s",$pStrListId,$pStrPodcastId));
 
     }//getUserLists
     public function countPodCastFromLists($ListId){
