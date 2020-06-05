@@ -1,9 +1,8 @@
 <?php
 require "../Models/UserModel.php";
 require "../Models/PodcastModel.php";
-require "../Models/ListsModel.php";
 session_start();
-$_SESSION['whereItComes'] = 'i';
+$_SESSION['whereItComes'] = 'l';
 if (isset($_SESSION['listCreated']) !== false) {
     if ($_SESSION['listCreated'] === true) {
         echo '<script>alert("New list created")</script>';
@@ -19,8 +18,8 @@ if (isset($_SESSION['podcastAddedToList'])) {
     }
     $_SESSION['podcastAddedToList'] = NULL;
 }
-if (isset($_SESSION['UserPodcastOfList'])) {
-    $_SESSION['UserPodcastOfList'] = null;
+if (isset($_SESSION['Podcast'])) {
+    $_SESSION['Podcast'] = null;
 }
 ?>
 <!DOCTYPE html>
@@ -55,22 +54,10 @@ if (isset($_SESSION['UserPodcastOfList'])) {
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/Podcast.php/ser">
-        <div class="row justify-content-center">
-            <div class="col-10">
-                <input type="text" name="searchExpression" id="searchExpression" placeholder="My Podcast"
-                       class=" form-control text-center">
-            </div>
-            <div class="col-2">
-                <input type="submit" class="btn btn-dark" value="Search">
-            </div>
-        </div>
-    </form>
-    <br>
     <?php
-    if (isset($_SESSION['Podcast'])) {
-        if ($_SESSION['Podcast'] !== null) {
-            $numeroDePaginas = ((count($_SESSION['Podcast']) - 1) / 20);
+    if (isset($_SESSION['UserPodcastOfList'])) {
+        if ($_SESSION['UserPodcastOfList'] !== null) {
+            $numeroDePaginas = ((count($_SESSION['UserPodcastOfList']) - 1) / 20);
             if (is_integer($numeroDePaginas) === false || $numeroDePaginas === 0) {
                 $numeroDePaginas = (integer)($numeroDePaginas + 1);
             }
@@ -94,59 +81,73 @@ if (isset($_SESSION['UserPodcastOfList'])) {
         <tbody>';
             $podcast = null;
             $numeroQueOForTemDeChegar = null;
-            $numeroDePodcastsRecolhidos = count($_SESSION['Podcast']) - 1;
+            $numeroDePodcastsRecolhidos = count($_SESSION['UserPodcastOfList']) - 1;
             if ($numeroDePodcastsRecolhidos < $numeroDaPaginaAtual * 20) {
                 $numeroQueOForTemDeChegar = $numeroDePodcastsRecolhidos;
             } else {
                 $numeroQueOForTemDeChegar = $numeroDaPaginaAtual * 20;
             }
             for ($i = (($numeroDaPaginaAtual - 1) * 20); $i <= $numeroQueOForTemDeChegar; $i++) {
-                $podcast = $_SESSION['Podcast'][$i];
-                $tabela .= sprintf('<tr><td scope="row">%s</td><td>%s</td><td>%s</td><td>
+                $podcast = $_SESSION['UserPodcastOfList'][$i];
+                $tabela .= sprintf('<tr><td scope="row">%s</td ><td >%s</td ><td >%s</td ><td >
                 <form method="post" action="listenerPodcast.php">
                 <div class="row justify-content-center">
                 <div class="col-6">
-                <input name="p" style="visibility: hidden" value="%s"></input>
+                <input name="p" style="visibility: hidden" value="%s">
                 <input type="submit" class="btn btn-dark"  value="Listen" >
-                </div>
-                </div>
-                </form></td >'
-                ,$podcast->title,$podcast->date,$podcast->description,$podcast->source);
+            </div>
+        </div>
+        </form>', $podcast->title, $podcast->date, $podcast->description, $podcast->source);
+
+                if ($_SESSION['NameOfCurrentList']['NAME'] !== "Historic") {
+                    $tabela .= '<form method="post" action="../Controller/Podcast.php/deletePodcast/' . $_SESSION["idOfList"] . '/' . $podcast->source . '">
+        <div class="row justify-content-center">
+          <div class="col-6">
+                <input type="submit" class="btn btn-dark"  value="Delete" >
+            </div>
+        </div>
+         </form>
+     
+    </td >';
+                }
                 if (isset($_SESSION["UserModel"]) !== false && isset($_SESSION["ListToAddPodcast"]) !== false) {
                     if (count($_SESSION["ListToAddPodcast"][$i]) > 0) {
-
-                        $tabela .= sprintf('<td>
-                    <form method="post" action="../Controller/Podcast.php/insertList/">
-                    <div class="row justify-content-center">
-                    <div class="col-6">
-                    <input name="p" style="visibility: hidden" value="%s">
-                    <select name="selectList">', $podcast->source);;
-                        foreach ($_SESSION["ListToAddPodcast"][$i] as $listName) {
-                            $tabela .= '<option>' . $listName . '</option>';
+                        $tabela .= '<td>
+        <form method="post" action="../Controller/Podcast.php/insertList/">
+        <div class="row justify-content-center">
+          <div class="col-6">
+          <input name="p" style="visibility: hidden" value="' . $podcast->source . '"/>
+                <select name="selectList">';
+                        foreach ($_SESSION["ListToAddPodcast"][$i] as $list) {
+                            $tabela .= '<option>' . $list . '</option>';
                         }
                         $tabela .= '</select>
-                         <input type="submit" class="btn btn-dark"  value="add ToList" >
-                         </div>
-                         </div>
-                         </form></td ></tr>';
+                <input type="submit" class="btn btn-dark"  value="add ToList" >
+            </div>
+        </div>
+    </form></td >';
                     }
+
                 }
             }
+            $tabela .= "</tr>";
             $tabela .= '</tbody></table>';
             echo $tabela;
             echo '<nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">';
             for ($i = 0; $i < $numeroDePaginas; $i++) {
                 if ($i + 1 === $numeroDaPaginaAtual) {
-                    echo '<li class="page-item active"><a class="page-link" name="n" href="index.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+                    echo '<li class="page-item active"><a class="page-link" name="n" href="listOfPodcasts.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
                 } else {
-                    echo '<li class="page-item"><a class="page-link" name="n" href="index.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+                    echo '<li class="page-item"><a class="page-link" name="n" href="listOfPodcasts.php?n=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
                 }
             }
             echo '</ul></nav>';
         }
     }
     ?>
+
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
             crossorigin="anonymous"></script>

@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="../bottstrap/bootstrap.css">
 <?php
 require_once "../Models/UserModel.php";
-session_start();?>
+session_start();
+if (isset($_SESSION['listCreated']) !== false) {
+    if ($_SESSION['listCreated'] === true) {
+        echo '<script>alert("New list created")</script>';
+    } else {
+        echo '<script>alert("A list with the name given already exists on your account")</script>';
+    }
+    $_SESSION['listCreated'] = NULL;
+}
+?>
 <style>
     html, body {
         width: 100%;
@@ -13,7 +21,10 @@ session_start();?>
         width: 100%;
     }
 </style>
-<body><nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<body>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -31,6 +42,7 @@ session_start();?>
         } else {
             echo '<div class="navbar-nav ml-auto">
             <a href="../Controller/Podcast.php/getList" class="nav-item nav-link">My Lists of Podcasts</a>
+            <a  id="createList" class="nav-item nav-link" onclick="redirect()">New List</a>
             <a href="./UserPanel.php" class="nav-item nav-link">Edit Account</a>
             <a href="./logout.php" class="nav-item nav-link">Logout</a>
             <a href="../Controller/User.php/deac" class="nav-item nav-link">Deactivate Account</a>
@@ -54,8 +66,6 @@ session_start();?>
     <div class="container">
     <div class="tab">
         <button class="tablinks btn-dark" onclick="openTab(event, 'UserInfo')">User Info</button>
-        <button class="tablinks btn-dark" onclick="openTab(event, 'PlayList')">PlayList</button>
-        <button class="tablinks btn-dark" onclick="openTab(event, 'Favourites')">Favourites</button>
     </div>
 
     <div id="UserInfo" style="visibility: hidden;" class="tabcontent">
@@ -79,16 +89,6 @@ session_start();?>
         </ul>
     </div>
 
-    <div id="PlayList" style="visibility: hidden;" class="tabcontent">
-        <h3>Your Play Lists</h3>
-        <p>Paris is the capital of France.</p>
-    </div>
-
-    <div id="Favourites" style="visibility: hidden;"  class="tabcontent">
-        <h3>Your Favourites: </h3>
-        <p>Tokyo is the capital of Japan.</p>
-    </div>
-
     <script>
     function openTab(evt, cityName) {
     var i, tabcontent, tablinks;
@@ -108,7 +108,6 @@ session_start();?>
     </div>
 </body>
 </html>
-
-<!--icons website: https://www.flaticon.com/free-icons/profile-->
+<script src="javascript.js"></script>
 
 

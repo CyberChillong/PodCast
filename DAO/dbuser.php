@@ -1,6 +1,4 @@
 <?php
-//require_once "../Library/dbConnection.php";
-//require_once "../vendor/autoload.php";
 namespace DAO;
 use Library;
 class dbuser

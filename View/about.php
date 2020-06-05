@@ -1,23 +1,20 @@
-<!DOCTYPE html>
-<html>
 <?php
 require "../Models/UserModel.php";
 session_start();
-if (isset($_SESSION['UserModel'])===false) {
-    header("Location:../View/login.php");
-}
 if (isset($_SESSION['listCreated']) !== false) {
     if ($_SESSION['listCreated'] === true) {
         echo '<script>alert("New list created")</script>';
     } else {
         echo '<script>alert("A list with the name given already exists on your account")</script>';
     }
-    $_SESSION['listCreated'] = NULL;
+$_SESSION['listCreated'] = NULL;
 }
 ?>
-<body>
+<!DOCTYPE html>
+<html>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -45,34 +42,41 @@ if (isset($_SESSION['listCreated']) !== false) {
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/USER.php/edit">
-        <div class="form-group row justify-content-center">
-            <label for="username">Username:</label>
-            <?php
-            echo '<input type="text" name="username" class="form-control text-center" required value='.$_SESSION["UserModel"]->username.'>';
-            ?>
+        <div class="row  justify-content-center">
+            <h1>Agregador de Podcast</h1>
         </div>
-        <div class="form-group row justify-content-center">
-            <label for="email">Email:</label>
-            <?php
-            echo '<input type="email" name="email" class="form-control text-center" required value='.$_SESSION["UserModel"]->emails.'>';
-            ?>
+
+    <div class="row justify-Content-center">
+        <p>
+            Com este trabalho pretendemos criar uma solução que agrega podcasts permitindo ao utilizador criar listas de reprodução , consumindo
+            o conteudo pela ordem que prefere sem ser interrompido por anuncios. Poderá utilizar esta ferramenta de forma gratuita.
+        </p>
+    </div>
+
+        <img src="./Assets/about.jpeg"  class="rounded-circle" alt="Cinque Terre" width="304" height="236">
+        <div class="row justify-Content-center">
+        <h2>Trabalho realizado por:</h2>
         </div>
-        <div class="form-group row justify-content-center">
-            <label for="password">Password:</label>
-            <?php
-            echo '<input type="password" name="password" class="form-control text-center" required value='.$_SESSION["UserModel"]->password.'>';
-            ?>
+
+    <div class="row justify-Content-center">
+                <ul>
+                    <li><h4>Rafael Meia Bota nº 160173004</h4></li>
+                    <li><h4>Miguel Caetano nº 170100329</h4></li>
+                    <li><h4>Daniel Carvalho nº 170100334</h4></li>
+                </ul>
         </div>
-        <div class="form-group row justify-content-center">
-            <input type="submit" value="Submit" class="btn btn-primary" required>
-        </div>
-    </form>
-    <?php
-    if (isset($_SESSION["EditAccountStatus"])) {
-        echo "<div class=\"alert alert-danger\">" . $_SESSION["EditAccountStatus"] . "</div>";
-    }//if
-    ?>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
 </div>
 </body>
 </html>

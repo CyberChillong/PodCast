@@ -6,10 +6,15 @@ session_start();
 <?php
 if (isset($_SESSION['UserModel'])) {
     header("Location:../View/index.php");
-} ?>
+}
+if(isset($_SESSION['activeAccount'])){
+    if($_SESSION['activeAccount']===false){
+        echo "<script>alert('Ativation of user account fail because of the credentials or the user account is already active')</script>";
+        $_SESSION['activeAccount']=null;
+    }
+}
+?>
 <body>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
@@ -24,6 +29,7 @@ if (isset($_SESSION['UserModel'])) {
             echo '<div class="navbar-nav ml-auto">
             <a href="./registar.php" class="nav-item nav-link">Sign in</a>
             <a href="./login.php" class="nav-item nav-link">Login</a>
+            <a href="./activateAccount.php" class="nav-item nav-link">Active Account</a>
         </div>';
         } else {
             echo '<div class="navbar-nav ml-auto">
@@ -36,7 +42,7 @@ if (isset($_SESSION['UserModel'])) {
         ?>
 </nav>
 <div class="container">
-    <form method="post" action="../Controller/USER.php/log">
+    <form method="post" action="../Controller/USER.php/act">
         <div class="form-group row justify-content-center">
             <label for="email">Email:</label>
             <input type="email" name="email" class="form-control text-center" required>
@@ -49,14 +55,6 @@ if (isset($_SESSION['UserModel'])) {
             <input type="submit" value="Submit" class="btn btn-primary">
         </div>
     </form>
-    <?php
-    if (isset($_SESSION["LoginStatus"])) {
-        echo "<div class=\"alert alert-danger\">" . $_SESSION["LoginStatus"] . "</div>";
-    }//if
-    if (isset($_SESSION["RegistrationStatus"])) {
-        echo "<div class=\"alert alert-success\">" . $_SESSION["RegistrationStatus"] . "</div>";
-    }//if
-    ?>
 </div>
 </body>
 </html>
